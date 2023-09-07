@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # env
 *env
+
+# session file
+session_db.json
