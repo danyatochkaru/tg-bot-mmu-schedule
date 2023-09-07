@@ -203,6 +203,42 @@ export class AppUpdate {
           ).reply_markup,
         },
       );
+    } else {
+      const message = await ctx.reply('Получаю данные...');
+      const date = new Date();
+      const data = await this.appService.getScheduleFromSite({
+        start: startOfWeek(date),
+        finish: endOfWeek(date),
+      });
+      const list = this.appService.formatData(data);
+      let answerText = this.appService.wrapInfo(
+        `В выбранный вами период пары не найдены`,
+      );
+
+      if (Array.isArray(list)) {
+        if (list.length) {
+          answerText = this.appService.formatSchedule(list);
+        }
+      } else {
+        answerText = 'Произошла ошибка';
+      }
+      await ctx.telegram.editMessageText(
+        ctx.chat.id,
+        message.message_id,
+        undefined,
+        answerText,
+        {
+          parse_mode: 'HTML',
+          reply_markup: week(date).reply_markup,
+        },
+      );
     }
+  }
+
+  @Command('info')
+  async info(@Ctx() ctx: Context) {
+    await ctx.reply(
+      `Бот с расписанием занятий для группы ИПС311-2 (ММУ)\n\nПланы развития:\n- Улучшить качество пользования в личных чатах\n- Сделать рассылку расписания (раз в день/неделю)\n- Сделать настройки рассылки и уведомлений\n- Оптимизация работы бота\n\nТекущая версия: 1.0`,
+    );
   }
 }

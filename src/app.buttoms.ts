@@ -1,5 +1,12 @@
 import { Markup } from 'telegraf';
-import { addDays, addWeeks, format, startOfWeek } from 'date-fns';
+import {
+  addDays,
+  addWeeks,
+  format,
+  isThisWeek,
+  isToday,
+  startOfWeek,
+} from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 
 export function menu() {
@@ -35,10 +42,11 @@ export function day(date: Date) {
         })}`,
       ),
       Markup.button.callback(
-        'Сегодня',
+        `Сегодня`,
         `day-${format(new Date(), 'yyyy.MM.dd', {
           locale: ruLocale,
         })}`,
+        isToday(date),
       ),
       Markup.button.callback('Меню', `menu`),
     ],
@@ -62,10 +70,11 @@ export function week(date: Date) {
         })}`,
       ),
       Markup.button.callback(
-        'Текущая',
+        `Текущая`,
         `week-${format(startOfWeek(new Date()), 'yyyy.MM.dd', {
           locale: ruLocale,
         })}`,
+        isThisWeek(date),
       ),
       Markup.button.callback('Меню', `menu`),
     ],
