@@ -35,7 +35,7 @@ export class AppUpdate {
           },
         )
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       await ctx.reply('Меню', menu());
