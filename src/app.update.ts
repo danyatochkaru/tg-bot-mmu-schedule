@@ -47,16 +47,20 @@ export class AppUpdate {
   async getDay(@Ctx() ctx: Context & { command?: string; payload?: string }) {
     let answerText: string;
     if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
-      await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        ctx.callbackQuery.message.message_id,
-        undefined,
-        'Получаю данные...',
-      );
-      const date = ctx.callbackQuery.data.replace('day-', '');
+      await ctx.telegram
+        .editMessageText(
+          ctx.chat.id,
+          ctx.callbackQuery.message.message_id,
+          undefined,
+          'Получаю данные...',
+        )
+        .catch((err) => {
+          console.error(err);
+        });
+      const date = new Date(ctx.callbackQuery.data.replace('day-', ''));
       const data = await this.appService.getScheduleFromSite({
-        start: new Date(date),
-        finish: new Date(date),
+        start: date,
+        finish: date,
       });
       const list = this.appService.formatData(data);
       if (Array.isArray(list)) {
@@ -65,7 +69,7 @@ export class AppUpdate {
         } else {
           answerText = this.appService.wrapInfo(
             `В выбранный вами период пары не найдены`,
-            new Date(date),
+            date,
           );
         }
       } else {
@@ -79,9 +83,7 @@ export class AppUpdate {
           answerText,
           {
             parse_mode: 'HTML',
-            reply_markup: day(
-              new Date(ctx.callbackQuery.data.replace('day-', '')),
-            ).reply_markup,
+            reply_markup: day(date).reply_markup,
           },
         )
         .catch((err) => {
@@ -92,9 +94,9 @@ export class AppUpdate {
         if (!ctx.payload) {
           await ctx.reply('Меню', menu());
         } else {
-          if (isValid(chrono.ru.parseDate(ctx.payload, new Date()))) {
+          if (isValid(chrono.ru.parseDate(ctx.payload))) {
             const message = await ctx.reply('Получаю данные...');
-            const date = chrono.ru.parseDate(ctx.payload, new Date());
+            const date = chrono.ru.parseDate(ctx.payload);
 
             const data = await this.appService.getScheduleFromSite({
               start: date,
@@ -114,16 +116,20 @@ export class AppUpdate {
             } else {
               answerText = list;
             }
-            await ctx.telegram.editMessageText(
-              ctx.chat.id,
-              message.message_id,
-              undefined,
-              answerText,
-              {
-                parse_mode: 'HTML',
-                reply_markup: day(new Date()).reply_markup,
-              },
-            );
+            await ctx.telegram
+              .editMessageText(
+                ctx.chat.id,
+                message.message_id,
+                undefined,
+                answerText,
+                {
+                  parse_mode: 'HTML',
+                  reply_markup: day(date).reply_markup,
+                },
+              )
+              .catch((err) => {
+                console.error(err);
+              });
           }
         }
       } else {
@@ -150,13 +156,17 @@ export class AppUpdate {
         } else {
           answerText = list;
         }
-        await ctx.telegram.editMessageText(
-          ctx.chat.id,
-          message.message_id,
-          undefined,
-          answerText,
-          { parse_mode: 'HTML', reply_markup: day(new Date()).reply_markup },
-        );
+        await ctx.telegram
+          .editMessageText(
+            ctx.chat.id,
+            message.message_id,
+            undefined,
+            answerText,
+            { parse_mode: 'HTML', reply_markup: day(date).reply_markup },
+          )
+          .catch((err) => {
+            console.error(err);
+          });
       }
     }
   }
@@ -164,81 +174,56 @@ export class AppUpdate {
   @Command(/week/gi)
   @Action(/week-/gi)
   async getWeek(@Ctx() ctx: Context) {
+    let date: Date, message;
     if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
-      await ctx.telegram.editMessageText(
+      message = await ctx.telegram.editMessageText(
         ctx.chat.id,
         ctx.callbackQuery.message.message_id,
         undefined,
         'Получаю данные...',
       );
-      const data = await this.appService.getScheduleFromSite({
-        start: startOfWeek(
-          new Date(ctx.callbackQuery.data.replace('week-', '')),
-        ),
-        finish: endOfWeek(
-          new Date(ctx.callbackQuery.data.replace('week-', '')),
-        ),
-      });
-      const list = this.appService.formatData(data);
-      let answerText = this.appService.wrapInfo(
-        `В выбранный вами период пары не найдены`,
-      );
-
-      if (Array.isArray(list)) {
-        if (list.length) {
-          answerText = this.appService.formatSchedule(list);
-        }
-      } else {
-        answerText = 'Произошла ошибка';
-      }
-      await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        ctx.callbackQuery.message.message_id,
-        undefined,
-        answerText,
-        {
-          parse_mode: 'HTML',
-          reply_markup: week(
-            new Date(ctx.callbackQuery.data.replace('week-', '')),
-          ).reply_markup,
-        },
-      );
+      date = new Date(ctx.callbackQuery.data.replace('week-', ''));
     } else {
-      const message = await ctx.reply('Получаю данные...');
-      const date = new Date();
-      const data = await this.appService.getScheduleFromSite({
-        start: startOfWeek(date),
-        finish: endOfWeek(date),
-      });
-      const list = this.appService.formatData(data);
-      let answerText = this.appService.wrapInfo(
-        `В выбранный вами период пары не найдены`,
-      );
-
-      if (Array.isArray(list)) {
-        if (list.length) {
-          answerText = this.appService.formatSchedule(list);
-        }
-      } else {
-        answerText = 'Произошла ошибка';
-      }
-      await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        message.message_id,
-        undefined,
-        answerText,
-        {
-          parse_mode: 'HTML',
-          reply_markup: week(date).reply_markup,
-        },
-      );
+      message = await ctx.reply('Получаю данные...');
+      date = new Date();
     }
+
+    const data = await this.appService.getScheduleFromSite({
+      start: startOfWeek(date),
+      finish: endOfWeek(date),
+    });
+    const list = this.appService.formatData(data);
+    let answerText = this.appService.wrapInfo(
+      `В выбранный вами период пары не найдены`,
+    );
+
+    if (Array.isArray(list)) {
+      if (list.length) {
+        answerText = this.appService.formatSchedule(list);
+      }
+    } else {
+      answerText = 'Произошла ошибка';
+    }
+    await ctx.telegram
+      .editMessageText(ctx.chat.id, message.message_id, undefined, answerText, {
+        parse_mode: 'HTML',
+        reply_markup: week(date).reply_markup,
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   @Command('info')
   async info(@Ctx() ctx: Context) {
     await ctx.reply(
-      `Бот с расписанием занятий для группы ИПС311-2 (ММУ)\n\nПланы развития:\n- Улучшить качество пользования в личных чатах\n- Сделать рассылку расписания (раз в день/неделю)\n- Сделать настройки рассылки и уведомлений\n- Оптимизация работы бота\n\nТекущая версия: 1.0`,
+      'Бот с расписанием занятий для группы ИПС311-2 (ММУ)\n\n' +
+        'Планы развития:\n' +
+        '- Улучшить качество пользования в личных чатах\n' +
+        '- Сделать рассылку расписания (раз в день/неделю)\n' +
+        '- Сделать настройки рассылки и уведомлений\n' +
+        '- Оптимизация работы бота\n\n' +
+        'Текущая версия: 1.0',
     );
   }
 }
