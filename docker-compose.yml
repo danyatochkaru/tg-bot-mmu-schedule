@@ -1,4 +1,4 @@
 services:
   bot:
-    build: .
+    build: src
     restart: always
