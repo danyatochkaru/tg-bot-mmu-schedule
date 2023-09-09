@@ -58,7 +58,7 @@ export class AppUpdate {
           console.error(err);
         });
       const payload = ctx.callbackQuery.data.replace('day-', '');
-      const date = new Date(payload === 'current' ? undefined : payload);
+      const date = new Date(payload === 'current' ? Date.now() : payload);
       const data = await this.appService.getScheduleFromSite({
         start: date,
         finish: date,
@@ -184,7 +184,7 @@ export class AppUpdate {
         'Получаю данные...',
       );
       const payload = ctx.callbackQuery.data.replace('week-', '');
-      date = new Date(payload === 'current' ? undefined : payload);
+      date = new Date(payload === 'current' ? Date.now() : payload);
     } else {
       message = await ctx.reply('Получаю данные...');
       date = new Date();
