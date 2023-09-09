@@ -57,7 +57,8 @@ export class AppUpdate {
         .catch((err) => {
           console.error(err);
         });
-      const date = new Date(ctx.callbackQuery.data.replace('day-', ''));
+      const payload = ctx.callbackQuery.data.replace('day-', '');
+      const date = new Date(payload === 'current' ? undefined : payload);
       const data = await this.appService.getScheduleFromSite({
         start: date,
         finish: date,
@@ -182,7 +183,8 @@ export class AppUpdate {
         undefined,
         'Получаю данные...',
       );
-      date = new Date(ctx.callbackQuery.data.replace('week-', ''));
+      const payload = ctx.callbackQuery.data.replace('week-', '');
+      date = new Date(payload === 'current' ? undefined : payload);
     } else {
       message = await ctx.reply('Получаю данные...');
       date = new Date();
@@ -223,7 +225,7 @@ export class AppUpdate {
         '- Сделать рассылку расписания (раз в день/неделю)\n' +
         '- Сделать настройки рассылки и уведомлений\n' +
         '- Оптимизация работы бота\n\n' +
-        'Текущая версия: 1.0',
+        'Текущая версия: 1.2',
     );
   }
 }

@@ -41,13 +41,7 @@ export function day(date: Date) {
           locale: ruLocale,
         })}`,
       ),
-      Markup.button.callback(
-        `Сегодня`,
-        `day-${format(new Date(), 'yyyy.MM.dd', {
-          locale: ruLocale,
-        })}`,
-        isToday(date),
-      ),
+      Markup.button.callback(`Сегодня`, `day-current`, isToday(date)),
       Markup.button.callback('Меню', `menu`),
     ],
     { columns: 2 },
@@ -69,13 +63,7 @@ export function week(date: Date) {
           locale: ruLocale,
         })}`,
       ),
-      Markup.button.callback(
-        `Текущая`,
-        `week-${format(startOfWeek(new Date()), 'yyyy.MM.dd', {
-          locale: ruLocale,
-        })}`,
-        isThisWeek(date),
-      ),
+      Markup.button.callback(`Текущая`, `week-current`, isThisWeek(date)),
       Markup.button.callback('Меню', `menu`),
     ],
     { columns: 2 },
