@@ -3,6 +3,10 @@ declare namespace NodeJS {
     TOKEN: string;
     AUTH: string;
     URL: string;
-    GROUP_ID: string;
+    TYPEORM_HOST: string;
+    TYPEORM_USER: string;
+    TYPEORM_PASS: string;
+    TYPEORM_DB: string;
+    TYPEORM_PORT: number;
   }
 }

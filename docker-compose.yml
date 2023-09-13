@@ -1,4 +1,15 @@
 services:
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=$TYPEORM_USER
+      - POSTGRES_PASSWORD=$TYPEORM_PASS
+      - POSTGRES_DB=$TYPEORM_DB
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
   bot:
     build: .
     restart: always
+    environment:
+      - TYPEORM_HOST=db
