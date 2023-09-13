@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppUpdate } from './app.update';
-import { AppService } from './app.service';
 import * as LocalSession from 'telegraf-session-local';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppUpdate } from './app.update';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from './schedule/schedule.module';
+import { MenuModule } from './menu/menu.module';
+import { AppService } from './app.service';
+import { SettingsModule } from './settings/settings.module';
+import { GreeterModule } from './greeter/greeter.module';
+import { UsersModule } from './users/users.module';
 
-const sessions = new LocalSession({ database: 'session_db.json' });
+const sessions = new LocalSession();
 
 @Module({
   imports: [
@@ -20,7 +26,28 @@ const sessions = new LocalSession({ database: 'session_db.json' });
         middlewares: [sessions.middleware()],
       }),
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('TYPEORM_HOST'),
+        username: configService.get('TYPEORM_USER'),
+        password: configService.get('TYPEORM_PASS'),
+        database: configService.get('TYPEORM_DB'),
+        port: configService.get('TYPEORM_PORT'),
+        entities: [__dirname + 'dist/**/*.entity.{t,j}.s'],
+        synchronize: true,
+        autoLoadEntities: true,
+      }),
+    }),
+    ScheduleModule,
+    MenuModule,
+    SettingsModule,
+    GreeterModule,
+    UsersModule,
   ],
   providers: [AppUpdate, AppService],
+  exports: [AppService],
 })
 export class AppModule {}
