@@ -5,12 +5,14 @@ import { UsersService } from './users.service';
 @Update()
 export class UsersUpdate {
   constructor(private readonly usersService: UsersService) {}
+
   @Command('me')
   async getMe(@Ctx() ctx: Context) {
     const user = await this.usersService.getInfo(ctx.message.from.id);
     await ctx.reply(
       user
-        ? `uid: ${user.uid}\n` +
+        ? `id: ${user.id}\n` +
+            `uid: ${user.uid}\n` +
             `username: ${user.username}\n` +
             `group: ${user.group_name}`
         : 'Вы не зарегистрированы',

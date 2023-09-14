@@ -22,22 +22,22 @@ export class UsersService {
   }
 
   async editInfo(
-    uid: number,
+    uid: number | string,
     payload: Omit<Partial<UserEntity>, 'id' | 'updated_at' | 'created_at'>,
   ) {
     const user = await this.getInfo(uid);
     if (!user) {
       throw new Error('Пользователь не найден');
     }
-    await this.userRepository.update({ uid }, payload);
+    await this.userRepository.update({ id: String(uid) }, payload);
     return this.getInfo(uid);
   }
 
-  getInfo(uid: number) {
-    return this.userRepository.findOneBy({ uid });
+  getInfo(uid: number | string) {
+    return this.userRepository.findOneBy({ id: String(uid) });
   }
 
-  async remove(uid: number) {
-    return this.userRepository.delete({ uid });
+  async remove(uid: number | string) {
+    return this.userRepository.delete({ uid: String(uid) });
   }
 }

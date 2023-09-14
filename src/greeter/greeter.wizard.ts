@@ -91,7 +91,7 @@ export class GreeterWizard {
       });
     } else {
       await this.usersService.register({
-        uid: user.id,
+        uid: String(user.id),
         group_id: parseInt(group_id),
         group_name,
         first_name: user.first_name,

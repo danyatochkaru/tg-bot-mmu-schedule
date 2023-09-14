@@ -4,11 +4,7 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppUpdate } from './app.update';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScheduleModule } from './schedule/schedule.module';
-import { MenuModule } from './menu/menu.module';
 import { AppService } from './app.service';
-import { SettingsModule } from './settings/settings.module';
-import { GreeterModule } from './greeter/greeter.module';
 import { UsersModule } from './users/users.module';
 
 const sessions = new LocalSession();
@@ -41,13 +37,12 @@ const sessions = new LocalSession();
         autoLoadEntities: true,
       }),
     }),
-    ScheduleModule,
-    MenuModule,
-    SettingsModule,
-    GreeterModule,
+    // ScheduleModule,
+    // MenuModule,
+    // SettingsModule,
+    // GreeterModule,
     UsersModule,
   ],
   providers: [AppUpdate, AppService],
-  exports: [AppService],
 })
 export class AppModule {}
