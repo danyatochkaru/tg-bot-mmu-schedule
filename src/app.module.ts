@@ -6,6 +6,10 @@ import { AppUpdate } from './app.update';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { MenuModule } from './menu/menu.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { SettingsModule } from './settings/settings.module';
+import { GreeterModule } from './greeter/greeter.module';
 
 const sessions = new LocalSession();
 
@@ -37,10 +41,10 @@ const sessions = new LocalSession();
         autoLoadEntities: true,
       }),
     }),
-    // ScheduleModule,
-    // MenuModule,
-    // SettingsModule,
-    // GreeterModule,
+    ScheduleModule,
+    MenuModule,
+    SettingsModule,
+    GreeterModule,
     UsersModule,
   ],
   providers: [AppUpdate, AppService],
