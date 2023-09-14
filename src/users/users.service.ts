@@ -29,12 +29,12 @@ export class UsersService {
     if (!user) {
       throw new Error('Пользователь не найден');
     }
-    await this.userRepository.update({ id: String(uid) }, payload);
+    await this.userRepository.update({ uid: String(uid) }, payload);
     return this.getInfo(uid);
   }
 
   getInfo(uid: number | string) {
-    return this.userRepository.findOneBy({ id: String(uid) });
+    return this.userRepository.findOneBy({ uid: String(uid) });
   }
 
   async remove(uid: number | string) {
