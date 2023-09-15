@@ -1,9 +1,9 @@
 import { Action, Ctx, Message, On, Wizard, WizardStep } from 'nestjs-telegraf';
-import { SELECT_GROUP } from '../app.constants';
+import { MESSAGES, SELECT_GROUP } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
 import axios from 'axios';
 import * as process from 'process';
-import { editMessage } from '../utils/eidtMessage';
+import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
 
@@ -14,13 +14,13 @@ export class GreeterWizard {
   @WizardStep(1)
   async onStart(@Ctx() ctx: WizardContext) {
     ctx.wizard.next();
-    return 'Напиши свою группу';
+    return MESSAGES['ru'].ENTER_GROUP;
   }
 
   @On('text')
   @WizardStep(2)
   async onMessage(@Ctx() ctx: WizardContext, @Message() msg: { text: string }) {
-    const message = await ctx.reply('Идёт поиск...');
+    const message = await ctx.reply(MESSAGES['ru'].SEARCHING);
     const groups = await axios
       .get(
         `https://${process.env.AUTH}@${
@@ -34,40 +34,24 @@ export class GreeterWizard {
       });
 
     if (typeof groups === 'string') {
-      await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        message.message_id,
-        undefined,
-        'Произошла ошибка. Повтори попытку',
-      );
+      await editMessage(ctx, MESSAGES['ru'].ERROR_RETRY, {}, message);
     } else {
       if (groups.length) {
         if (groups.length > 8) {
-          await ctx.telegram.editMessageText(
-            ctx.chat.id,
-            message.message_id,
-            undefined,
-            'Слишком много подходящих групп. Напиши поточнее',
-          );
+          await editMessage(ctx, MESSAGES['ru'].MANY_GROUPS_FOUND, {}, message);
         } else {
           ctx.wizard.next();
-          await ctx.telegram.editMessageText(
-            ctx.chat.id,
-            message.message_id,
-            undefined,
-            `Выбери группу:`,
+          await editMessage(
+            ctx,
+            MESSAGES['ru'].SELECT_GROUP,
             {
               reply_markup: searchingGroupList(groups).reply_markup,
             },
+            message,
           );
         }
       } else {
-        await ctx.telegram.editMessageText(
-          ctx.chat.id,
-          message.message_id,
-          undefined,
-          'Группа с таким названием не найдена. Повтори попытку',
-        );
+        await editMessage(ctx, MESSAGES['ru'].NO_GROUPS_FOUND, {}, message);
       }
     }
   }
@@ -100,12 +84,8 @@ export class GreeterWizard {
       });
     }
     await ctx.scene.leave();
-    await editMessage(
-      ctx,
-      `Выбрана группа <b>${group_name}</b>\n\nДля вызова меню напиши /menu`,
-      {
-        parse_mode: 'HTML',
-      },
-    );
+    await editMessage(ctx, MESSAGES['ru'].GROUP_SELECTED(group_name), {
+      parse_mode: 'HTML',
+    });
   }
 }

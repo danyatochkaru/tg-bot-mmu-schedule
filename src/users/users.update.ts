@@ -1,6 +1,7 @@
 import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { UsersService } from './users.service';
+import { MESSAGES } from '../app.constants';
 
 @Update()
 export class UsersUpdate {
@@ -15,13 +16,13 @@ export class UsersUpdate {
             `uid: ${user.uid}\n` +
             `username: ${user.username}\n` +
             `group: ${user.group_name}`
-        : 'Вы не зарегистрированы',
+        : MESSAGES['ru'].NOT_REGISTERED,
     );
   }
 
   @Command('remove_me')
   async debugRemove(@Ctx() ctx: Context) {
     await this.usersService.remove(ctx.from.id);
-    await ctx.reply('Профиль удален');
+    await ctx.reply(MESSAGES['ru'].PROFILE_REMOVED);
   }
 }

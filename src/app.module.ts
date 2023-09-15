@@ -4,7 +4,6 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppUpdate } from './app.update';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MenuModule } from './menu/menu.module';
 import { ScheduleModule } from './schedule/schedule.module';
@@ -47,6 +46,6 @@ const sessions = new LocalSession();
     GreeterModule,
     UsersModule,
   ],
-  providers: [AppUpdate, AppService],
+  providers: [AppUpdate],
 })
 export class AppModule {}

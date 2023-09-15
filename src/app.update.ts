@@ -1,6 +1,6 @@
 import { Ctx, Start, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
-import { SELECT_GROUP } from './app.constants';
+import { MESSAGES, SELECT_GROUP } from './app.constants';
 import { UsersService } from './users/users.service';
 
 @Update()
@@ -14,9 +14,7 @@ export class AppUpdate {
     if (!user) {
       await ctx.scene.enter(SELECT_GROUP);
     } else {
-      await ctx.reply(
-        'Ты уже зарегистрирован!\n\nДля вызова меню напиши /menu',
-      );
+      await ctx.reply(MESSAGES['ru'].ALREADY_REGISTERED);
     }
   }
 }

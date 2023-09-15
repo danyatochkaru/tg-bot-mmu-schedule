@@ -29,6 +29,9 @@ export class UserEntity {
   @Column({ nullable: true })
   group_name?: string;
 
+  @Column({ default: false })
+  detail_week?: boolean;
+
   @UpdateDateColumn()
   updated_at: Date;
 

@@ -9,6 +9,12 @@ export function settingsController({ user }: { user: Partial<UserEntity> }) {
         'change-group',
       ),
     ],
+    [
+      Markup.button.callback(
+        `Подробная неделя | ${user.detail_week ? 'Вкл' : 'Выкл'}`,
+        `change-detail-week=${!user.detail_week}`,
+      ),
+    ],
     [Markup.button.callback('Меню', 'menu')],
   ]);
 }

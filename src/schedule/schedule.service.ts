@@ -15,8 +15,12 @@ export class ScheduleService {
     date: Date,
     type: 'day' | 'week' = 'day',
   ): Promise<LessonDto[] | { error: any }> {
-    const start = formatDate(type === 'day' ? date : startOfWeek(date)),
-      finish = formatDate(type === 'day' ? start : endOfWeek(date));
+    const start = formatDate(
+        type === 'day' ? date : startOfWeek(date, { weekStartsOn: 1 }),
+      ),
+      finish = formatDate(
+        type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 }),
+      );
     return await axios
       .get(
         `https://${process.env.AUTH}@${process.env.URL}schedule/group/${String(
@@ -28,6 +32,30 @@ export class ScheduleService {
         console.error(err);
         return { error: err };
       });
+  }
+
+  async fetchScheduleByDates(
+    group_id: number,
+    dates: { start: Date; end?: Date }[],
+  ) {
+    return Promise.all(
+      dates.map(
+        async (d) =>
+          await axios
+            .get(
+              `https://${process.env.AUTH}@${
+                process.env.URL
+              }schedule/group/${String(group_id)}/?start=${formatDate(
+                d.start,
+              )}&finish=${formatDate(d.end ?? d.start)}`,
+            )
+            .then((res) => res.data)
+            .catch((err) => {
+              console.error(err);
+              return { date: d.start, error: err };
+            }),
+      ),
+    );
   }
 
   prepareTextMessageForDay(data: LessonDto[], date = new Date()) {

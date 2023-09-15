@@ -2,6 +2,9 @@ import { Markup } from 'telegraf';
 import { formatDate } from '../utils/formatDate';
 import { addDays, addWeeks, isThisWeek, isToday } from 'date-fns';
 
+export const emptyController = () =>
+  Markup.inlineKeyboard([Markup.button.callback('Меню', 'menu')]);
+
 export const dayController = (date: Date, hasError = false) =>
   Markup.inlineKeyboard([
     [
@@ -16,6 +19,7 @@ export const dayController = (date: Date, hasError = false) =>
       Markup.button.callback('След.', `day-${formatDate(addDays(date, 1))}`),
     ],
     [
+      Markup.button.callback('Неделя', `week-${formatDate(date)}`),
       Markup.button.callback(
         'Сегодня',
         `day-${formatDate(new Date())}`,
@@ -25,13 +29,20 @@ export const dayController = (date: Date, hasError = false) =>
     ],
   ]);
 
-export const weekController = (date: Date, hasError = false) =>
-  Markup.inlineKeyboard([
+export const weekController = (
+  date: Date,
+  options?: { hasError?: boolean; days?: { date: Date; name: string }[] },
+) => {
+  const daysBtn = options?.days?.map((day) =>
+    Markup.button.callback(day.name, `day-${formatDate(day.date)}`),
+  );
+  return Markup.inlineKeyboard([
+    daysBtn,
     [
       Markup.button.callback(
         'Повторить попытку',
         `week-${formatDate(date)}`,
-        !hasError,
+        !options.hasError,
       ),
     ],
     [
@@ -42,8 +53,9 @@ export const weekController = (date: Date, hasError = false) =>
       Markup.button.callback(
         'Текущая',
         `week-${formatDate(new Date())}`,
-        isThisWeek(date),
+        isThisWeek(date, { weekStartsOn: 1 }),
       ),
       Markup.button.callback('Меню', 'menu'),
     ],
   ]);
+};
