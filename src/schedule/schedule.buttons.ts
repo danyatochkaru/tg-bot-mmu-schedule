@@ -20,11 +20,7 @@ export const dayController = (date: Date, hasError = false) =>
     ],
     [
       Markup.button.callback('Неделя', `week-${formatDate(date)}`),
-      Markup.button.callback(
-        'Сегодня',
-        `day-${formatDate(new Date())}`,
-        isToday(date),
-      ),
+      Markup.button.callback('Сегодня', `day-current`, isToday(date)),
       Markup.button.callback('Меню', 'menu'),
     ],
   ]);
@@ -52,7 +48,7 @@ export const weekController = (
     [
       Markup.button.callback(
         'Текущая',
-        `week-${formatDate(new Date())}`,
+        `week-current`,
         isThisWeek(date, { weekStartsOn: 1 }),
       ),
       Markup.button.callback('Меню', 'menu'),

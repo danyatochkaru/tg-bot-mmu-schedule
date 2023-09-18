@@ -30,9 +30,28 @@ export class ScheduleUpdate {
       if (!user) {
         await editMessage(ctx, MESSAGES['ru'].GROUP_NOT_SELECTED);
         return;
+      } else {
+        if (
+          ('username' in ctx.from && user.username !== ctx.from.username) ||
+          ('first_name' in ctx.from &&
+            user.first_name !== ctx.from.first_name) ||
+          ('last_name' in ctx.from && user.last_name !== ctx.from.last_name)
+        ) {
+          this.usersService
+            .editInfo(ctx.from.id, {
+              last_name: ctx.from.last_name,
+              first_name: ctx.from.first_name,
+              username: ctx.from.username,
+            })
+            .then((r) => console.log(`user info ${r.uid}: updated`))
+            .catch((err) =>
+              console.error(`user info ${ctx.from.id}: update errored`, err),
+            );
+        }
       }
 
-      const date = new Date(ctx.callbackQuery.data.replace('day-', ''));
+      const payload = ctx.callbackQuery.data.replace('day-', '');
+      const date = new Date(payload === 'current' ? Date.now() : payload);
       const data = await this.scheduleService.fetchSchedule(
         user.group_id,
         date,
@@ -62,9 +81,28 @@ export class ScheduleUpdate {
       if (!user) {
         await editMessage(ctx, MESSAGES['ru'].GROUP_NOT_SELECTED);
         return;
+      } else {
+        if (
+          ('username' in ctx.from && user.username !== ctx.from.username) ||
+          ('first_name' in ctx.from &&
+            user.first_name !== ctx.from.first_name) ||
+          ('last_name' in ctx.from && user.last_name !== ctx.from.last_name)
+        ) {
+          this.usersService
+            .editInfo(ctx.from.id, {
+              last_name: ctx.from.last_name,
+              first_name: ctx.from.first_name,
+              username: ctx.from.username,
+            })
+            .then((r) => console.log(`user info ${r.uid}: updated`))
+            .catch((err) =>
+              console.error(`user info ${ctx.from.id}: update errored`, err),
+            );
+        }
       }
 
-      const date = new Date(ctx.callbackQuery.data.replace('week-', ''));
+      const payload = ctx.callbackQuery.data.replace('week-', '');
+      const date = new Date(payload === 'current' ? Date.now() : payload);
       const data = await this.scheduleService.fetchSchedule(
         user.group_id,
         date,
@@ -106,7 +144,25 @@ export class ScheduleUpdate {
     if (!user) {
       await editMessage(ctx, MESSAGES['ru'].GROUP_NOT_SELECTED, {}, message);
       return;
+    } else {
+      if (
+        ('username' in ctx.from && user.username !== ctx.from.username) ||
+        ('first_name' in ctx.from && user.first_name !== ctx.from.first_name) ||
+        ('last_name' in ctx.from && user.last_name !== ctx.from.last_name)
+      ) {
+        this.usersService
+          .editInfo(ctx.from.id, {
+            last_name: ctx.from.last_name,
+            first_name: ctx.from.first_name,
+            username: ctx.from.username,
+          })
+          .then((r) => console.log(`user info ${r.uid}: updated`))
+          .catch((err) =>
+            console.error(`user info ${ctx.from.id}: update errored`, err),
+          );
+      }
     }
+
     let dates = chrono.ru.parse(msg.text, new Date(), {
       timezones: { XYZ: 3 },
     });
