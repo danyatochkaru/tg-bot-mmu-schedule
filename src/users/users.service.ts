@@ -37,6 +37,20 @@ export class UsersService {
     return this.userRepository.findOneBy({ uid: String(uid) });
   }
 
+  getListForMailing(user_id: string) {
+    const ADMIN_IDS = process.env.ADMIN_IDS;
+
+    if (!ADMIN_IDS) {
+      throw new Error('Список админов пуст');
+    }
+
+    if (ADMIN_IDS.split(',').includes(user_id))
+      return this.userRepository.find({ where: { allow_mailing: true } });
+    else {
+      throw new Error('Недостаточно прав');
+    }
+  }
+
   async remove(uid: number | string) {
     return this.userRepository.delete({ uid: String(uid) });
   }

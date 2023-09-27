@@ -8,5 +8,6 @@ declare namespace NodeJS {
     TYPEORM_PASS: string;
     TYPEORM_DB: string;
     TYPEORM_PORT: number;
+    ADMIN_IDS: string;
   }
 }

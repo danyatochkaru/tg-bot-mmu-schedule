@@ -32,6 +32,9 @@ export class UserEntity {
   @Column({ default: false })
   detail_week?: boolean;
 
+  @Column({ default: true })
+  allow_mailing?: boolean;
+
   @UpdateDateColumn()
   updated_at: Date;
 

@@ -51,6 +51,11 @@ export const weekController = (
         `week-current`,
         isThisWeek(date, { weekStartsOn: 1 }),
       ),
+      Markup.button.callback(
+        'Сегодня',
+        `day-current`,
+        !isThisWeek(date, { weekStartsOn: 1 }),
+      ),
       Markup.button.callback('Меню', 'menu'),
     ],
   ]);

@@ -25,4 +25,35 @@ export class UsersUpdate {
     await this.usersService.remove(ctx.from.id);
     await ctx.reply(MESSAGES['ru'].PROFILE_REMOVED);
   }
+
+  @Command('send')
+  async doMailing(@Ctx() ctx: Context) {
+    const users = await this.usersService.getListForMailing(
+      String(ctx.from.id),
+    );
+
+    if (
+      !('reply_to_message' in ctx.message) ||
+      !('text' in (ctx.message as { reply_to_message?: any })?.reply_to_message)
+    ) {
+      await ctx.reply(MESSAGES['ru'].ATTACHED_MESSAGE_FOR_MAILING_NOT_FOUND);
+      return;
+    }
+
+    for (const user of users) {
+      await ctx.telegram
+        .sendMessage(
+          parseInt(user.uid),
+          [
+            (ctx.message as { reply_to_message?: any })?.reply_to_message.text,
+            MESSAGES['ru'].MAILING_UNSUBSCRIBE_INFO,
+          ].join(`\n\n`),
+          {
+            entities: (ctx.message as { reply_to_message?: any })
+              ?.reply_to_message.entities,
+          },
+        )
+        .catch((err) => console.error('Error sending message', err));
+    }
+  }
 }

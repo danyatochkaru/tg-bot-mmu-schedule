@@ -24,7 +24,9 @@ export class SettingsUpdate {
 
   @Action('change-group')
   async changeGroup(@Ctx() ctx: Context & { scene: any }) {
-    await ctx.deleteMessage(ctx.callbackQuery.message.message_id);
+    await ctx
+      .deleteMessage(ctx.callbackQuery.message.message_id)
+      .catch((err) => console.error(err));
     await ctx.scene.enter(SELECT_GROUP);
   }
 
@@ -38,6 +40,22 @@ export class SettingsUpdate {
     await editMessage(
       ctx,
       MESSAGES['ru'].DETAIL_WEEK_SWITCHED(updated_user.detail_week),
+      {
+        reply_markup: settingsController({ user: updated_user }).reply_markup,
+      },
+    );
+  }
+
+  @Action(/toggle_allow_mailing/i)
+  async toggleAllowMailing(@Ctx() ctx: Context) {
+    const flag =
+      (ctx.callbackQuery as { data: string }).data.split('=')[1] === 'true';
+    const updated_user = await this.usersService.editInfo(ctx.from.id, {
+      allow_mailing: flag,
+    });
+    await editMessage(
+      ctx,
+      MESSAGES['ru'].ALLOW_MAILING_CHANGED(updated_user.allow_mailing),
       {
         reply_markup: settingsController({ user: updated_user }).reply_markup,
       },
