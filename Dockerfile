@@ -7,4 +7,5 @@ COPY ./ ./
 RUN pnpm format
 RUN pnpm lint
 RUN pnpm build
+VOLUME /app/logs ./logs
 CMD ["pnpm", "start:prod"]

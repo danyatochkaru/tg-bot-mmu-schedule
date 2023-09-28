@@ -4,9 +4,12 @@ import { editMessage } from '../utils/editMessage';
 import { settingsController } from './settings.buttons';
 import { UsersService } from '../users/users.service';
 import { MESSAGES, SELECT_GROUP } from '../app.constants';
+import { Logger } from '@nestjs/common';
 
 @Update()
 export class SettingsUpdate {
+  private logger = new Logger(SettingsUpdate.name);
+
   constructor(private readonly usersService: UsersService) {}
   @Action('settings')
   async onSettings(@Ctx() ctx: Context) {
@@ -26,7 +29,7 @@ export class SettingsUpdate {
   async changeGroup(@Ctx() ctx: Context & { scene: any }) {
     await ctx
       .deleteMessage(ctx.callbackQuery.message.message_id)
-      .catch((err) => console.error(err));
+      .catch((err) => this.logger.error(err));
     await ctx.scene.enter(SELECT_GROUP);
   }
 

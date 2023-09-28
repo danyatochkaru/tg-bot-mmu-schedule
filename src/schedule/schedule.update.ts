@@ -12,9 +12,12 @@ import { getDayOfWeek } from '../utils/getDayOfWeek';
 import * as chrono from 'chrono-node';
 import { LessonDto } from './dto/Lesson.dto';
 import { MESSAGES } from '../app.constants';
+import { Logger } from '@nestjs/common';
 
 @Update()
 export class ScheduleUpdate {
+  private logger = new Logger(ScheduleUpdate.name);
+
   constructor(
     private readonly scheduleService: ScheduleService,
     private readonly usersService: UsersService,
@@ -43,9 +46,12 @@ export class ScheduleUpdate {
               first_name: ctx.from.first_name,
               username: ctx.from.username,
             })
-            .then((r) => console.log(`user info ${r.uid}: updated`))
+            .then((r) => this.logger.log(`user info ${r.uid}: updated`))
             .catch((err) =>
-              console.error(`user info ${ctx.from.id}: update errored`, err),
+              this.logger.error(
+                `user info ${ctx.from.id}: update errored`,
+                err,
+              ),
             );
         }
       }
@@ -94,9 +100,12 @@ export class ScheduleUpdate {
               first_name: ctx.from.first_name,
               username: ctx.from.username,
             })
-            .then((r) => console.log(`user info ${r.uid}: updated`))
+            .then((r) => this.logger.log(`user info ${r.uid}: updated`))
             .catch((err) =>
-              console.error(`user info ${ctx.from.id}: update errored`, err),
+              this.logger.error(
+                `user info ${ctx.from.id}: update errored`,
+                err,
+              ),
             );
         }
       }
@@ -156,9 +165,9 @@ export class ScheduleUpdate {
             first_name: ctx.from.first_name,
             username: ctx.from.username,
           })
-          .then((r) => console.log(`user info ${r.uid}: updated`))
+          .then((r) => this.logger.log(`user info ${r.uid}: updated`))
           .catch((err) =>
-            console.error(`user info ${ctx.from.id}: update errored`, err),
+            this.logger.error(`user info ${ctx.from.id}: update errored`, err),
           );
       }
     }
@@ -198,7 +207,7 @@ export class ScheduleUpdate {
     const anyWithError = data.flat().find((value) => 'error' in value);
 
     if (anyWithError) {
-      console.log(anyWithError);
+      this.logger.debug(anyWithError);
       await editMessage(ctx, MESSAGES['ru'].NO_ANSWER_RETRY, {}, message);
       return;
     }

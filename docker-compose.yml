@@ -13,3 +13,5 @@ services:
     restart: always
     environment:
       - TYPEORM_HOST=db
+    volumes:
+      - ./logs:/app/logs

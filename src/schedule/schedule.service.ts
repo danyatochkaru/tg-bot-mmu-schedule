@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import * as process from 'process';
 import { formatDate } from '../utils/formatDate';
@@ -10,6 +10,8 @@ import { declOfNum } from '../utils/declOfNum';
 
 @Injectable()
 export class ScheduleService {
+  private logger = new Logger(ScheduleService.name);
+
   async fetchSchedule(
     group_id: number,
     date: Date,
@@ -29,7 +31,7 @@ export class ScheduleService {
       )
       .then((res) => res.data)
       .catch((err) => {
-        console.error(err);
+        this.logger.error(err);
         return { error: err };
       });
   }
@@ -51,7 +53,7 @@ export class ScheduleService {
             )
             .then((res) => res.data)
             .catch((err) => {
-              console.error(err);
+              this.logger.error(err);
               return { date: d.start, error: err };
             }),
       ),
@@ -60,7 +62,7 @@ export class ScheduleService {
 
   prepareTextMessageForDay(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
-      console.error(`[prepareTextMessage] data is not array\n`, data);
+      this.logger.error(`[prepareTextMessage] data is not array\n`, data);
       return 'Произошла ошибка';
     }
 
@@ -104,7 +106,7 @@ export class ScheduleService {
 
   prepareTextMessageForWeek(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
-      console.error(`[prepareTextMessage] data is not array\n`, data);
+      this.logger.error(`[prepareTextMessage] data is not array\n`, data);
       return 'Произошла ошибка';
     }
 

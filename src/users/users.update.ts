@@ -2,9 +2,12 @@ import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { UsersService } from './users.service';
 import { MESSAGES } from '../app.constants';
+import { Logger } from '@nestjs/common';
 
 @Update()
 export class UsersUpdate {
+  private logger = new Logger(UsersUpdate.name);
+
   constructor(private readonly usersService: UsersService) {}
 
   @Command('me')
@@ -53,7 +56,7 @@ export class UsersUpdate {
               ?.reply_to_message.entities,
           },
         )
-        .catch((err) => console.error('Error sending message', err));
+        .catch((err) => this.logger.error('Error sending message', err));
     }
   }
 }
