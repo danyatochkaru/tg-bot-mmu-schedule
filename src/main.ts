@@ -11,7 +11,7 @@ async function bootstrap() {
       transports: [
         new winston.transports.File({
           dirname: './logs',
-          filename: `${new Date().toISOString()}.log`,
+          filename: `${new Date().toISOString().split('T')[0]}.log`,
           format: combine(
             timestamp(),
             errors({ stack: true }),
