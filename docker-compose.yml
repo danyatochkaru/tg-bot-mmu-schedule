@@ -15,3 +15,5 @@ services:
       - TYPEORM_HOST=db
     volumes:
       - ./logs:/app/logs
+    depends_on:
+      - db
