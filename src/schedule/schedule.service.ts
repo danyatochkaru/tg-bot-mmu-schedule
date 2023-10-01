@@ -5,14 +5,13 @@ import { getDayOfWeek } from '../utils/getDayOfWeek';
 import { getWeekNumber } from '../utils/getWeekNumber';
 import { LessonDto } from './dto/Lesson.dto';
 import { declOfNum } from '../utils/declOfNum';
-import { fetcher } from '../utils/fetcher';
-import { ConfigService } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ScheduleService {
   private logger = new Logger(ScheduleService.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly httpService: HttpService) {}
 
   async fetchSchedule(
     group_id: number,
@@ -25,7 +24,7 @@ export class ScheduleService {
       finish = formatDate(
         type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 }),
       );
-    return await fetcher(this.configService)
+    return await this.httpService.axiosRef
       .get(
         `schedule/group/${String(group_id)}/?start=${start}&finish=${finish}`,
       )
@@ -43,7 +42,7 @@ export class ScheduleService {
     return Promise.all(
       dates.map(
         async (d) =>
-          await fetcher(this.configService)
+          await this.httpService.axiosRef
             .get(
               `schedule/group/${String(group_id)}/?start=${formatDate(
                 d.start,

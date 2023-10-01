@@ -4,9 +4,9 @@ import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
-import { fetcher } from '../utils/fetcher';
-import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { AxiosError } from 'axios';
 
 @Wizard(SELECT_GROUP)
 export class GreeterWizard {
@@ -14,7 +14,7 @@ export class GreeterWizard {
 
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
   ) {}
 
   @WizardStep(1)
@@ -27,10 +27,10 @@ export class GreeterWizard {
   @WizardStep(2)
   async onMessage(@Ctx() ctx: WizardContext, @Message() msg: { text: string }) {
     const message = await ctx.reply(MESSAGES['ru'].SEARCHING);
-    const groups = await fetcher(this.configService)
+    const groups = await this.httpService.axiosRef
       .get(`search?term=${encodeURIComponent(msg.text)}&type=group`)
       .then((res) => res.data)
-      .catch((err) => {
+      .catch((err: AxiosError) => {
         this.logger.error(err);
         return 'Ошибка сервера';
       });
