@@ -1,15 +1,18 @@
 import { Action, Ctx, Message, On, Wizard, WizardStep } from 'nestjs-telegraf';
 import { MESSAGES, SELECT_GROUP } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
-import axios from 'axios';
-import * as process from 'process';
 import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
+import { fetcher } from '../utils/fetcher';
+import { ConfigService } from '@nestjs/config';
 
 @Wizard(SELECT_GROUP)
 export class GreeterWizard {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @WizardStep(1)
   async onStart(@Ctx() ctx: WizardContext) {
@@ -21,12 +24,8 @@ export class GreeterWizard {
   @WizardStep(2)
   async onMessage(@Ctx() ctx: WizardContext, @Message() msg: { text: string }) {
     const message = await ctx.reply(MESSAGES['ru'].SEARCHING);
-    const groups = await axios
-      .get(
-        `https://${process.env.AUTH}@${
-          process.env.URL
-        }search?term=${encodeURIComponent(msg.text)}&type=group`,
-      )
+    const groups = await fetcher(this.configService)
+      .get(`search?term=${encodeURIComponent(msg.text)}&type=group`)
       .then((res) => res.data)
       .catch((err) => {
         console.error(err);

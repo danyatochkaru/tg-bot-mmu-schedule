@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:alpine
+    image: postgres:15-alpine
     restart: unless-stopped
     environment:
       - POSTGRES_USER=$TYPEORM_USER

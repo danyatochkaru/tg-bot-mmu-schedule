@@ -1,16 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
-import axios from 'axios';
-import * as process from 'process';
 import { formatDate } from '../utils/formatDate';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { getDayOfWeek } from '../utils/getDayOfWeek';
 import { getWeekNumber } from '../utils/getWeekNumber';
 import { LessonDto } from './dto/Lesson.dto';
 import { declOfNum } from '../utils/declOfNum';
+import { fetcher } from '../utils/fetcher';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ScheduleService {
   private logger = new Logger(ScheduleService.name);
+
+  constructor(private readonly configService: ConfigService) {}
 
   async fetchSchedule(
     group_id: number,
@@ -23,15 +25,14 @@ export class ScheduleService {
       finish = formatDate(
         type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 }),
       );
-    return await axios
+    return await fetcher(this.configService)
       .get(
-        `https://${process.env.AUTH}@${process.env.URL}schedule/group/${String(
-          group_id,
-        )}/?start=${start}&finish=${finish}`,
+        `schedule/group/${String(group_id)}/?start=${start}&finish=${finish}`,
       )
       .then((res) => res.data)
       .catch((err) => {
         this.logger.error(err);
+        console.log(err);
         return { error: err };
       });
   }
@@ -43,11 +44,9 @@ export class ScheduleService {
     return Promise.all(
       dates.map(
         async (d) =>
-          await axios
+          await fetcher(this.configService)
             .get(
-              `https://${process.env.AUTH}@${
-                process.env.URL
-              }schedule/group/${String(group_id)}/?start=${formatDate(
+              `schedule/group/${String(group_id)}/?start=${formatDate(
                 d.start,
               )}&finish=${formatDate(d.end ?? d.start)}`,
             )
