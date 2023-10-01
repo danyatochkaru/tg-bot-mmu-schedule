@@ -19,7 +19,7 @@ async function bootstrap() {
               (info) =>
                 `${info.timestamp} ${info.level}:${
                   'context' in info && info.context ? ` [${info.context}]` : ''
-                } ${info.message}`,
+                } ${info.message}${'stack' in info ? info.stack : ''}`,
             ),
           ),
         }),
