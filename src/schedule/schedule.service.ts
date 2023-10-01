@@ -32,7 +32,6 @@ export class ScheduleService {
       .then((res) => res.data)
       .catch((err) => {
         this.logger.error(err);
-        console.log(err);
         return { error: err };
       });
   }
