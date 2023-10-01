@@ -6,9 +6,12 @@ import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
 import { fetcher } from '../utils/fetcher';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 @Wizard(SELECT_GROUP)
 export class GreeterWizard {
+  private logger = new Logger(GreeterWizard.name);
+
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
@@ -28,7 +31,7 @@ export class GreeterWizard {
       .get(`search?term=${encodeURIComponent(msg.text)}&type=group`)
       .then((res) => res.data)
       .catch((err) => {
-        console.error(err);
+        this.logger.error(err);
         return 'Ошибка сервера';
       });
 
