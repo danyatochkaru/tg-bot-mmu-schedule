@@ -10,6 +10,7 @@ export const theMenu = (date = new Date()) =>
         `week-${formatDate(date)}`,
       ),
     ],
+    [Markup.button.url('Сайт с расписанием', `https://schedule.mi.university`)],
     [
       Markup.button.callback('Настройки', `settings`),
       Markup.button.url('Автор', 'https://danyatochka.ru'),
