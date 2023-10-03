@@ -1,38 +1,31 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { formatDate } from '../utils/formatDate';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { getDayOfWeek } from '../utils/getDayOfWeek';
 import { getWeekNumber } from '../utils/getWeekNumber';
 import { LessonDto } from './dto/Lesson.dto';
 import { declOfNum } from '../utils/declOfNum';
-import { HttpService } from '@nestjs/axios';
+import { ApiService } from '../api/api.service';
 
 @Injectable()
 export class ScheduleService {
   private logger = new Logger(ScheduleService.name);
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   async fetchSchedule(
     group_id: number,
     date: Date,
     type: 'day' | 'week' = 'day',
-  ): Promise<LessonDto[] | { error: any }> {
-    const start = formatDate(
-        type === 'day' ? date : startOfWeek(date, { weekStartsOn: 1 }),
-      ),
-      finish = formatDate(
-        type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 }),
-      );
-    return await this.httpService.axiosRef
-      .get(
-        `schedule/group/${String(group_id)}/?start=${start}&finish=${finish}`,
-      )
-      .then((res) => res.data)
-      .catch((err) => {
-        this.logger.error(err);
-        return { error: err };
-      });
+  ): Promise<LessonDto[] | Error> {
+    const start =
+      type === 'day' ? date : startOfWeek(date, { weekStartsOn: 1 });
+    const finish =
+      type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 });
+    return await this.apiService.schedule({
+      entity_id: group_id,
+      entity_type: 'group',
+      payload: { finish, start },
+    });
   }
 
   async fetchScheduleByDates(
@@ -42,17 +35,11 @@ export class ScheduleService {
     return Promise.all(
       dates.map(
         async (d) =>
-          await this.httpService.axiosRef
-            .get(
-              `schedule/group/${String(group_id)}/?start=${formatDate(
-                d.start,
-              )}&finish=${formatDate(d.end ?? d.start)}`,
-            )
-            .then((res) => res.data)
-            .catch((err) => {
-              this.logger.error(err);
-              return { date: d.start, error: err };
-            }),
+          (await this.apiService.schedule({
+            entity_id: group_id,
+            entity_type: 'group',
+            payload: { finish: d.end ?? d.start, start: d.start },
+          })) as LessonDto[] | Error,
       ),
     );
   }
@@ -109,7 +96,6 @@ export class ScheduleService {
 
     if (!data.length) {
       return [
-        this.getFormattedDate(date),
         'В выбранный период пары не найдены',
         this.getWeekParity(date),
       ].join('\n\n');

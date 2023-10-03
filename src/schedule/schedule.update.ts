@@ -66,11 +66,11 @@ export class ScheduleUpdate {
 
       await editMessage(
         ctx,
-        'error' in data
+        data instanceof Error
           ? MESSAGES['ru'].NO_ANSWER_RETRY
           : this.scheduleService.prepareTextMessageForDay(data, date),
         {
-          reply_markup: dayController(date, 'error' in data).reply_markup,
+          reply_markup: dayController(date, data instanceof Error).reply_markup,
           parse_mode: 'HTML',
         },
       );
@@ -120,16 +120,16 @@ export class ScheduleUpdate {
 
       await editMessage(
         ctx,
-        'error' in data
+        data instanceof Error
           ? MESSAGES['ru'].NO_ANSWER_RETRY
           : user.detail_week
           ? this.scheduleService.prepareTextMessageForDay(data, date)
           : this.scheduleService.prepareTextMessageForWeek(data, date),
         {
           reply_markup: weekController(date, {
-            hasError: 'error' in data,
+            hasError: data instanceof Error,
             days:
-              'error' in data
+              data instanceof Error
                 ? []
                 : data
                     .map((i) => i.date)
@@ -195,18 +195,19 @@ export class ScheduleUpdate {
       return;
     }
 
-    const data: LessonDto[][] = await this.scheduleService.fetchScheduleByDates(
-      user.group_id,
+    const data: (LessonDto[] | Error)[] =
+      await this.scheduleService.fetchScheduleByDates(
+        user.group_id,
 
-      dates.map((date) => ({
-        start: date.start?.date(),
-        end: date.end?.date(),
-      })),
-    );
+        dates.map((date) => ({
+          start: date.start?.date(),
+          end: date.end?.date(),
+        })),
+      );
 
-    const anyWithError = data.flat().find((value) => 'error' in value);
+    const anyWithError = data.flat().find((value) => value instanceof Error);
 
-    if (anyWithError) {
+    if (anyWithError instanceof Error) {
       this.logger.debug(anyWithError);
       await editMessage(ctx, MESSAGES['ru'].NO_ANSWER_RETRY, {}, message);
       return;
@@ -216,11 +217,11 @@ export class ScheduleUpdate {
       ctx,
       user.detail_week
         ? this.scheduleService.prepareTextMessageForDay(
-            data.flat(),
+            (data as LessonDto[][]).flat(),
             dates.length && dates[0].start?.date(),
           )
         : this.scheduleService.prepareTextMessageForWeek(
-            data.flat(),
+            (data as LessonDto[][]).flat(),
             dates.length && dates[0].start?.date(),
           ),
       {

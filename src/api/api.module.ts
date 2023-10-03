@@ -1,14 +1,10 @@
 import { Module } from '@nestjs/common';
-import { GreeterWizard } from './greeter.wizard';
-import { UsersModule } from '../users/users.module';
+import { ApiService } from './api.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ApiModule } from '../api/api.module';
 
 @Module({
   imports: [
-    UsersModule,
-    ApiModule,
     HttpModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -18,6 +14,7 @@ import { ApiModule } from '../api/api.module';
       }),
     }),
   ],
-  providers: [GreeterWizard],
+  providers: [ApiService],
+  exports: [ApiService],
 })
-export class GreeterModule {}
+export class ApiModule {}

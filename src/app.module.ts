@@ -9,6 +9,7 @@ import { MenuModule } from './menu/menu.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { SettingsModule } from './settings/settings.module';
 import { GreeterModule } from './greeter/greeter.module';
+import { ApiModule } from './api/api.module';
 
 const sessions = new LocalSession();
 
@@ -45,6 +46,7 @@ const sessions = new LocalSession();
     SettingsModule,
     GreeterModule,
     UsersModule,
+    ApiModule,
   ],
   providers: [AppUpdate],
 })

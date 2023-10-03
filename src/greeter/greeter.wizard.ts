@@ -4,17 +4,13 @@ import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
-import { Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { AxiosError } from 'axios';
+import { ApiService } from '../api/api.service';
 
 @Wizard(SELECT_GROUP)
 export class GreeterWizard {
-  private logger = new Logger(GreeterWizard.name);
-
   constructor(
     private readonly usersService: UsersService,
-    private readonly httpService: HttpService,
+    private readonly apiService: ApiService,
   ) {}
 
   @WizardStep(1)
@@ -27,35 +23,34 @@ export class GreeterWizard {
   @WizardStep(2)
   async onMessage(@Ctx() ctx: WizardContext, @Message() msg: { text: string }) {
     const message = await ctx.reply(MESSAGES['ru'].SEARCHING);
-    const groups = await this.httpService.axiosRef
-      .get(`search?term=${encodeURIComponent(msg.text)}&type=group`)
-      .then((res) => res.data)
-      .catch((err: AxiosError) => {
-        this.logger.error(err);
-        return 'Ошибка сервера';
-      });
+    const groups = await this.apiService.search({
+      payload: { term: msg.text, type: 'group' },
+    });
 
-    if (typeof groups === 'string') {
+    if (groups instanceof Error) {
       await editMessage(ctx, MESSAGES['ru'].ERROR_RETRY, {}, message);
-    } else {
-      if (groups.length) {
-        if (groups.length > 8) {
-          await editMessage(ctx, MESSAGES['ru'].MANY_GROUPS_FOUND, {}, message);
-        } else {
-          ctx.wizard.next();
-          await editMessage(
-            ctx,
-            MESSAGES['ru'].SELECT_GROUP,
-            {
-              reply_markup: searchingGroupList(groups).reply_markup,
-            },
-            message,
-          );
-        }
-      } else {
-        await editMessage(ctx, MESSAGES['ru'].NO_GROUPS_FOUND, {}, message);
-      }
+      return;
     }
+
+    if (!groups.length) {
+      await editMessage(ctx, MESSAGES['ru'].NO_GROUPS_FOUND, {}, message);
+      return;
+    }
+
+    if (groups.length > 8) {
+      await editMessage(ctx, MESSAGES['ru'].MANY_GROUPS_FOUND, {}, message);
+      return;
+    }
+
+    ctx.wizard.next();
+    await editMessage(
+      ctx,
+      MESSAGES['ru'].SELECT_GROUP,
+      {
+        reply_markup: searchingGroupList(groups).reply_markup,
+      },
+      message,
+    );
   }
 
   @Action(/group-/i)
@@ -67,24 +62,21 @@ export class GreeterWizard {
         .split(':');
 
     const user_from_db = await this.usersService.getInfo(user.id);
+    const payload = {
+      uid: String(user.id),
+      group_id: parseInt(group_id),
+      group_name,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      username: user.username,
+    };
+
     if (user_from_db) {
-      await this.usersService.editInfo(user.id, {
-        group_id: parseInt(group_id),
-        group_name,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-      });
+      await this.usersService.editInfo(user.id, payload);
     } else {
-      await this.usersService.register({
-        uid: String(user.id),
-        group_id: parseInt(group_id),
-        group_name,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-      });
+      await this.usersService.register(payload);
     }
+
     await ctx.scene.leave();
     await editMessage(ctx, MESSAGES['ru'].GROUP_SELECTED(group_name), {
       parse_mode: 'HTML',
