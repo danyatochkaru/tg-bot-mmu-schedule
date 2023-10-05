@@ -1,10 +1,15 @@
 import { Markup } from 'telegraf';
 
-export function searchingGroupList(groups: { label: string; id: number }[]) {
-  return Markup.inlineKeyboard(
-    groups.map((group) =>
-      Markup.button.callback(group.label, `group-${group.id}:${group.label}`),
-    ),
+export const searchingGroupList = (groups: { label: string; id: number }[]) =>
+  Markup.inlineKeyboard(
+    [
+      ...groups.map((group) =>
+        Markup.button.callback(
+          group.label,
+          `group-search-${group.id}:${group.label}`,
+        ),
+      ),
+      Markup.button.callback('Отмена', 'cancel'),
+    ],
     { columns: 2 },
   );
-}

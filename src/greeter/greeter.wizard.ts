@@ -53,12 +53,19 @@ export class GreeterWizard {
     );
   }
 
-  @Action(/group-/i)
+  @Action('cancel')
+  @WizardStep(3)
+  async chancelSelectGroup(@Ctx() ctx: WizardContext) {
+    ctx.wizard.back();
+    await editMessage(ctx, MESSAGES['ru'].ENTER_GROUP);
+  }
+
+  @Action(/group-search-/i)
   @WizardStep(3)
   async onGroupSelect(@Ctx() ctx: WizardContext) {
     const user = ctx.callbackQuery.from,
       [group_id, group_name] = (ctx.callbackQuery as { data: string }).data
-        .replace('group-', '')
+        .replace('group-search-', '')
         .split(':');
 
     const user_from_db = await this.usersService.getInfo(user.id);
