@@ -3,13 +3,12 @@ import { formatDate } from '../utils/formatDate';
 
 export const theMenu = (date = new Date()) =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('Расписание на день', `day-${formatDate(date)}`)],
     [
-      Markup.button.callback(
-        'Расписание на неделю',
-        `week-${formatDate(date)}`,
-      ),
+      Markup.button.callback('На день', `day-${formatDate(date)}`),
+
+      Markup.button.callback('На неделю', `week-${formatDate(date)}`),
     ],
+    [Markup.button.callback('Преподаватель', 'lecturer')],
     [Markup.button.url('Сайт с расписанием', `https://schedule.mi.university`)],
     [
       Markup.button.callback('Настройки', `settings`),

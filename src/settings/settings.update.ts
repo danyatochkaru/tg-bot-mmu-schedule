@@ -27,9 +27,11 @@ export class SettingsUpdate {
 
   @Action('change-group')
   async changeGroup(@Ctx() ctx: Context & { scene: any }) {
-    await ctx
-      .deleteMessage(ctx.callbackQuery.message.message_id)
-      .catch((err) => this.logger.error(err));
+    if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
+      await ctx
+        .deleteMessage(ctx.callbackQuery.message.message_id)
+        .catch((err) => this.logger.error(err));
+    }
     await ctx.scene.enter(SELECT_GROUP);
   }
 

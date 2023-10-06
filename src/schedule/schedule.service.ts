@@ -46,7 +46,7 @@ export class ScheduleService {
 
   prepareTextMessageForDay(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
-      this.logger.error(`[prepareTextMessage] data is not array\n`, data);
+      this.logger.error(`[prepareTextMessageForDay] data is not array\n`, data);
       return 'Произошла ошибка';
     }
 
@@ -90,7 +90,10 @@ export class ScheduleService {
 
   prepareTextMessageForWeek(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
-      this.logger.error(`[prepareTextMessage] data is not array\n`, data);
+      this.logger.error(
+        `[prepareTextMessageForWeek] data is not array\n`,
+        data,
+      );
       return 'Произошла ошибка';
     }
 
