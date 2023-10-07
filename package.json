@@ -37,7 +37,7 @@
     "@nestjs/cli": "^10.1.18",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^9.4.3",
-    "@types/node": "18.16.12",
+    "@types/node": "20.8.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.51.0",
