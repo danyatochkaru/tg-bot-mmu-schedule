@@ -1,12 +1,11 @@
 import { Markup } from 'telegraf';
-import { formatDate } from '../utils/formatDate';
 
-export const theMenu = (date = new Date()) =>
+export const theMenu = () =>
   Markup.inlineKeyboard([
     [
-      Markup.button.callback('На день', `day-${formatDate(date)}`),
+      Markup.button.callback('На день', `day-current`),
 
-      Markup.button.callback('На неделю', `week-${formatDate(date)}`),
+      Markup.button.callback('На неделю', `week-current`),
     ],
     [Markup.button.callback('Преподаватель', 'lecturer')],
     [Markup.button.url('Сайт с расписанием', `https://schedule.mi.university`)],
