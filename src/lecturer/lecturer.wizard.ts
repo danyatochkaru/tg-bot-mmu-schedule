@@ -71,7 +71,9 @@ export class LecturerWizard {
   @WizardStep(3)
   async chancelSelectLecturer(@Ctx() ctx: WizardContext) {
     ctx.wizard.back();
-    await editMessage(ctx, MESSAGES['ru'].ENTER_LECTURER);
+    await editMessage(ctx, MESSAGES['ru'].ENTER_LECTURER, {
+      reply_markup: searchingLecturerList([]).reply_markup,
+    });
   }
 
   @Action(/lecturer-search-/i)
