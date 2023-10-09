@@ -84,9 +84,9 @@ export class LecturerWizard {
       '',
     );
 
-    const selected_lecturer = (ctx.wizard.state as any).lecturers.find(
-      (l: any) => String(l.id) === String(lecturer_id),
-    );
+    const selected_lecturer = (
+      ctx.wizard.state as { lecturers: any[] }
+    ).lecturers.find((l: any) => String(l.id) === String(lecturer_id));
 
     await ctx.scene.leave();
     await editMessage(

@@ -42,6 +42,7 @@ export class GreeterWizard {
       return;
     }
 
+    (ctx.wizard.state as any).groups = groups;
     ctx.wizard.next();
     await editMessage(
       ctx,
@@ -63,16 +64,21 @@ export class GreeterWizard {
   @Action(/group-search-/i)
   @WizardStep(3)
   async onGroupSelect(@Ctx() ctx: WizardContext) {
-    const user = ctx.callbackQuery.from,
-      [group_id, group_name] = (ctx.callbackQuery as { data: string }).data
-        .replace('group-search-', '')
-        .split(':');
+    const user = ctx.callbackQuery.from;
+    const group_id = (ctx.callbackQuery as { data: string }).data.replace(
+      'group-search-',
+      '',
+    );
+
+    const selected_group = (ctx.wizard.state as { groups: any[] }).groups.find(
+      (l: any) => String(l.id) === String(group_id),
+    );
 
     const user_from_db = await this.usersService.getInfo(user.id);
     const payload = {
       uid: String(user.id),
       group_id: parseInt(group_id),
-      group_name,
+      group_name: selected_group.label,
       first_name: user.first_name,
       last_name: user.last_name,
       username: user.username,
@@ -85,8 +91,12 @@ export class GreeterWizard {
     }
 
     await ctx.scene.leave();
-    await editMessage(ctx, MESSAGES['ru'].GROUP_SELECTED(group_name), {
-      parse_mode: 'HTML',
-    });
+    await editMessage(
+      ctx,
+      MESSAGES['ru'].GROUP_SELECTED(selected_group.label),
+      {
+        parse_mode: 'HTML',
+      },
+    );
   }
 }

@@ -1,7 +1,13 @@
 import { Context } from 'telegraf';
 import { ExtraEditMessageText } from 'telegraf/src/telegram-types';
 
-export function editMessage(
+function checkMessage(message: { message_id: number }) {
+  if (!message) {
+    throw new Error('No message provided');
+  }
+}
+
+export async function editMessage(
   ctx: Context,
   text: string,
   options?: ExtraEditMessageText,
@@ -9,10 +15,8 @@ export function editMessage(
 ) {
   try {
     if (ctx && !ctx.callbackQuery) {
-      if (!message) {
-        return false;
-      }
-      return ctx.telegram.editMessageText(
+      checkMessage(message);
+      return await ctx.telegram.editMessageText(
         ctx.chat.id,
         message.message_id,
         undefined,
@@ -21,7 +25,7 @@ export function editMessage(
       );
     }
 
-    return ctx.telegram.editMessageText(
+    return await ctx.telegram.editMessageText(
       ctx.chat.id,
       ctx.callbackQuery.message.message_id,
       undefined,
@@ -29,6 +33,7 @@ export function editMessage(
       options,
     );
   } catch (err: any) {
-    console.log(`Failed to edit message for ${ctx.chat.id}`, err);
+    console.error(`Failed to edit message for ${ctx.chat.id}`, err);
+    return false;
   }
 }

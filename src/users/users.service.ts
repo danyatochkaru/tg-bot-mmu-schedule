@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
+  private logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -53,5 +55,30 @@ export class UsersService {
 
   async remove(uid: number | string) {
     return this.userRepository.delete({ uid: String(uid) });
+  }
+
+  async checkUserDataUpdated(user: {
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    id: number;
+  }) {
+    const user_from_db = await this.getInfo(user.id);
+
+    if (
+      ('username' in user && user_from_db.username !== user.username) ||
+      ('first_name' in user && user_from_db.first_name !== user.first_name) ||
+      ('last_name' in user && user_from_db.last_name !== user.last_name)
+    ) {
+      this.editInfo(user.id, {
+        last_name: user.last_name,
+        first_name: user.first_name,
+        username: user.username,
+      })
+        .then((r) => this.logger.log(`user info ${r.uid}: updated`))
+        .catch((err) =>
+          this.logger.error(`user info ${user.id}: update errored`, err),
+        );
+    }
   }
 }
