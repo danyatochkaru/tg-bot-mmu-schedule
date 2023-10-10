@@ -34,7 +34,7 @@ dependencies:
     version: 2.30.0
   nest-winston:
     specifier: ^1.9.4
-    version: 1.9.4(@nestjs/common@9.4.3)(winston@3.10.0)
+    version: 1.9.4(@nestjs/common@9.4.3)(winston@3.11.0)
   nestjs-telegraf:
     specifier: ^2.7.0
     version: 2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.14.0)(typescript@5.2.2)
@@ -57,8 +57,8 @@ dependencies:
     specifier: ^0.3.17
     version: 0.3.17(pg@8.11.3)(ts-node@10.9.1)
   winston:
-    specifier: ^3.10.0
-    version: 3.10.0
+    specifier: ^3.11.0
+    version: 3.11.0
 
 devDependencies:
   '@nestjs/cli':
@@ -226,6 +226,11 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
     requiresBuild: true
+
+  /@colors/colors@1.6.0:
+    resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
+    engines: {node: '>=0.1.90'}
+    dev: false
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -2546,7 +2551,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /nest-winston@1.9.4(@nestjs/common@9.4.3)(winston@3.10.0):
+  /nest-winston@1.9.4(@nestjs/common@9.4.3)(winston@3.11.0):
     resolution: {integrity: sha512-ilEmHuuYSAI6aMNR120fLBl42EdY13QI9WRggHdEizt9M7qZlmXJwpbemVWKW/tqRmULjSx/otKNQ3GMQbfoUQ==}
     peerDependencies:
       '@nestjs/common': ^5.0.0 || ^6.6.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -2554,7 +2559,7 @@ packages:
     dependencies:
       '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
       fast-safe-stringify: 2.1.1
-      winston: 3.10.0
+      winston: 3.11.0
     dev: false
 
   /nestjs-telegraf@2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.14.0)(typescript@5.2.2):
@@ -3756,11 +3761,11 @@ packages:
       triple-beam: 1.4.1
     dev: false
 
-  /winston@3.10.0:
-    resolution: {integrity: sha512-nT6SIDaE9B7ZRO0u3UvdrimG0HkB7dSTAgInQnNR2SOPJ4bvq5q79+pXLftKmP52lJGW15+H5MCK0nM9D3KB/g==}
+  /winston@3.11.0:
+    resolution: {integrity: sha512-L3yR6/MzZAOl0DsysUXHVjOwv8mKZ71TrA/41EIduGpOOV5LQVodqN+QdQ6BS6PJ/RdIshZhq84P/fStEZkk7g==}
     engines: {node: '>= 12.0.0'}
     dependencies:
-      '@colors/colors': 1.5.0
+      '@colors/colors': 1.6.0
       '@dabh/diagnostics': 2.0.3
       async: 3.2.4
       is-stream: 2.0.1
