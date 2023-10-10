@@ -1,5 +1,6 @@
 import { Context } from 'telegraf';
 import { ExtraEditMessageText } from 'telegraf/src/telegram-types';
+import { Logger } from '@nestjs/common';
 
 function checkMessage(message: { message_id: number }) {
   if (!message) {
@@ -13,6 +14,8 @@ export async function editMessage(
   options?: ExtraEditMessageText,
   message?: { message_id: number },
 ) {
+  const logger = new Logger('editMessage');
+
   try {
     if (ctx && !ctx.callbackQuery) {
       checkMessage(message);
@@ -33,7 +36,8 @@ export async function editMessage(
       options,
     );
   } catch (err: any) {
-    console.error(`Failed to edit message for ${ctx.chat.id}`, err);
+    logger.error(`Failed to edit message for ${ctx.chat.id}`);
+    logger.error(err);
     return false;
   }
 }

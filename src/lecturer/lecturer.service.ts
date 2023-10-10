@@ -24,10 +24,8 @@ export class LecturerService {
 
   prepareTextMessageForLecturer(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
-      this.logger.error(
-        `[prepareTextMessageForLecturer] data is not array\n`,
-        data,
-      );
+      this.logger.error(`[prepareTextMessageForLecturer] data is not array`);
+      this.logger.error(data);
       return 'Произошла ошибка';
     }
 
