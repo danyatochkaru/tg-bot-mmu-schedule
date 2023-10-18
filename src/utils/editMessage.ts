@@ -37,7 +37,7 @@ export async function editMessage(
     );
   } catch (err: any) {
     logger.error(`Failed to edit message for ${ctx.chat.id}`);
-    logger.error(err);
+    logger.error(err ?? 'Unknown error');
     return false;
   }
 }

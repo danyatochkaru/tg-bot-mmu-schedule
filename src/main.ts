@@ -14,6 +14,21 @@ async function bootstrap() {
           filename: `${new Date().toISOString().split('T')[0]}.log`,
           format: combine(
             timestamp(),
+            errors(),
+            printf(
+              (info) =>
+                `${info.timestamp} ${info.level}:${
+                  'context' in info && info.context ? ` [${info.context}]` : ''
+                } ${info.message}`,
+            ),
+          ),
+        }),
+        new winston.transports.File({
+          dirname: './logs',
+          level: 'error',
+          filename: `${new Date().toISOString().split('T')[0]}-error.log`,
+          format: combine(
+            timestamp(),
             errors({ stack: true }),
             printf(
               (info) =>

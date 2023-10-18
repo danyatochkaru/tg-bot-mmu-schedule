@@ -2,9 +2,11 @@ import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { UsersService } from './users.service';
 import { MESSAGES } from '../app.constants';
-import { Logger } from '@nestjs/common';
+import { Logger, UseInterceptors } from '@nestjs/common';
+import { LoggingInterceptor } from '../logging/logging.interceptor';
 
 @Update()
+@UseInterceptors(new LoggingInterceptor())
 export class UsersUpdate {
   private logger = new Logger(UsersUpdate.name);
 

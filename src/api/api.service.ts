@@ -18,8 +18,8 @@ export class ApiService {
       );
       return res.data;
     } catch (err) {
-      this.logger.error(err);
-      this.logger.error(data);
+      this.logger.error(err ?? 'Unknown error');
+      this.logger.error(JSON.stringify(data, undefined, 2));
       return new Error('Request error');
     }
   }
@@ -35,8 +35,8 @@ export class ApiService {
       );
       return res.data;
     } catch (err) {
-      this.logger.error(err);
-      this.logger.error(data);
+      this.logger.error(err ?? 'Unknown error');
+      this.logger.error(JSON.stringify(data, undefined, 2));
       return new Error('Request error');
     }
   }

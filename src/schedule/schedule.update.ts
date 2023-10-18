@@ -12,9 +12,11 @@ import { getDayOfWeek } from '../utils/getDayOfWeek';
 import * as chrono from 'chrono-node';
 import { LessonDto } from './dto/Lesson.dto';
 import { MESSAGES } from '../app.constants';
-import { Logger } from '@nestjs/common';
+import { Logger, UseInterceptors } from '@nestjs/common';
+import { LoggingInterceptor } from '../logging/logging.interceptor';
 
 @Update()
+@UseInterceptors(new LoggingInterceptor())
 export class ScheduleUpdate {
   private logger = new Logger(ScheduleUpdate.name);
 

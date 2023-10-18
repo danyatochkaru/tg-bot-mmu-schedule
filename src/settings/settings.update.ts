@@ -4,9 +4,11 @@ import { editMessage } from '../utils/editMessage';
 import { settingsController } from './settings.buttons';
 import { UsersService } from '../users/users.service';
 import { MESSAGES, SELECT_GROUP } from '../app.constants';
-import { Logger } from '@nestjs/common';
+import { Logger, UseInterceptors } from '@nestjs/common';
+import { LoggingInterceptor } from '../logging/logging.interceptor';
 
 @Update()
+@UseInterceptors(new LoggingInterceptor())
 export class SettingsUpdate {
   private logger = new Logger(SettingsUpdate.name);
 
