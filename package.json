@@ -18,7 +18,7 @@
     "@nestjs/common": "^9.4.3",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.4.3",
-    "@nestjs/schedule": "^3.0.4",
+    "@nestjs/schedule": "^4.0.0",
     "@nestjs/typeorm": "^10.0.0",
     "axios": "^1.5.1",
     "chrono-node": "^2.7.0",
