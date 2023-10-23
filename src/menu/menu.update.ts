@@ -3,11 +3,10 @@ import { Context } from 'telegraf';
 import { theMenu } from './menu.buttons';
 import { editMessage } from '../utils/editMessage';
 import { MESSAGES } from '../app.constants';
-import { Logger, UseInterceptors } from '@nestjs/common';
-import { LoggingInterceptor } from '../logging/logging.interceptor';
+import { Logger } from '@nestjs/common';
 
 @Update()
-@UseInterceptors(new LoggingInterceptor())
+// @UseInterceptors(new LoggingInterceptor())
 export class MenuUpdate {
   private logger = new Logger(MenuUpdate.name);
 

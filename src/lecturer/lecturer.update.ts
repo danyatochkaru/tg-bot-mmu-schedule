@@ -1,15 +1,14 @@
 import { Action, Command, Ctx, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { MESSAGES, SELECT_LECTURER } from '../app.constants';
-import { Logger, UseInterceptors } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { editMessage } from '../utils/editMessage';
 import { LecturerService } from './lecturer.service';
 import { lecturerController } from './lecturer.buttons';
 import { ExtraEditMessageText } from 'telegraf/src/telegram-types';
-import { LoggingInterceptor } from '../logging/logging.interceptor';
 
 @Update()
-@UseInterceptors(new LoggingInterceptor())
+// @UseInterceptors(new LoggingInterceptor())
 export class LecturerUpdate {
   private logger = new Logger(LecturerUpdate.name);
 

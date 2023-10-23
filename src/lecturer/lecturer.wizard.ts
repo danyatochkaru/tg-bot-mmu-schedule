@@ -78,7 +78,7 @@ export class LecturerWizard {
 
   @Action(/lecturer-search-/i)
   @WizardStep(3)
-  async onGroupSelect(@Ctx() ctx: WizardContext) {
+  async onLecturerSelect(@Ctx() ctx: WizardContext) {
     const lecturer_id = (ctx.callbackQuery as { data: string }).data.replace(
       'lecturer-search-',
       '',
