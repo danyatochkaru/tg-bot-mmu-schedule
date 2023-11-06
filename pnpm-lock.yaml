@@ -37,7 +37,7 @@ dependencies:
     version: 1.9.4(@nestjs/common@9.4.3)(winston@3.11.0)
   nestjs-telegraf:
     specifier: ^2.7.0
-    version: 2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.14.0)(typescript@5.2.2)
+    version: 2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.15.0)(typescript@5.2.2)
   pg:
     specifier: ^8.11.3
     version: 8.11.3
@@ -48,11 +48,11 @@ dependencies:
     specifier: ^7.8.1
     version: 7.8.1
   telegraf:
-    specifier: ^4.14.0
-    version: 4.14.0
+    specifier: ^4.15.0
+    version: 4.15.0
   telegraf-session-local:
     specifier: ^2.1.1
-    version: 2.1.1(debug@4.3.4)(telegraf@4.14.0)
+    version: 2.1.1(debug@4.3.4)(telegraf@4.15.0)
   typeorm:
     specifier: ^0.3.17
     version: 0.3.17(pg@8.11.3)(ts-node@10.9.1)
@@ -2669,7 +2669,7 @@ packages:
       winston: 3.11.0
     dev: false
 
-  /nestjs-telegraf@2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.14.0)(typescript@5.2.2):
+  /nestjs-telegraf@2.7.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(telegraf@4.15.0)(typescript@5.2.2):
     resolution: {integrity: sha512-rtXvk+s5tCBIzp8oZMRNEmFf0ox7E2CMMaE1gskqQRqtafqqZKKDe8V600R63i7pynCJcld4mZC9oPEqKP2obA==}
     peerDependencies:
       '@nestjs/common': ^9.0.0 || ^10.0.0
@@ -2682,7 +2682,7 @@ packages:
       '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       lodash: 4.17.21
       reflect-metadata: 0.1.13
-      telegraf: 4.14.0
+      telegraf: 4.15.0
       typescript: 5.2.2
     dev: false
 
@@ -3445,7 +3445,7 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /telegraf-session-local@2.1.1(debug@4.3.4)(telegraf@4.14.0):
+  /telegraf-session-local@2.1.1(debug@4.3.4)(telegraf@4.15.0):
     resolution: {integrity: sha512-ApcTkNh8MizkuOmt+MReKDWQkflNHkOQthuLmRc+zM+ltMTOxHRd5kKvMBKCiNFA77frDRs1a3ryUDRpF+JPJA==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -3455,11 +3455,11 @@ packages:
       '@types/lowdb': 1.0.14
       debug: 4.3.4
       lowdb: 1.0.0
-      telegraf: 4.14.0
+      telegraf: 4.15.0
     dev: false
 
-  /telegraf@4.14.0:
-    resolution: {integrity: sha512-Nn2EBsuar/Mf3SD6O9tHmJ0FyJWnwAi4rewkJMmzd/O1xWYKglEuzSnCuHHRY7oD5NJ6WNPsavta5DbED8tG3w==}
+  /telegraf@4.15.0:
+    resolution: {integrity: sha512-jOQhpMZxZ7gTD1/pIQkXHv0BNVRMfn0xtRHnxHv6GQdeISMErzzAe82rMm78ZPSwwKCS4vVu3n/c2LMY8UFiKg==}
     engines: {node: ^12.20.0 || >=14.13.1}
     hasBin: true
     dependencies:
