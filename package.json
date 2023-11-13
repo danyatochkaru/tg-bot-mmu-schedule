@@ -20,7 +20,7 @@
     "@nestjs/core": "^9.4.3",
     "@nestjs/schedule": "^4.0.0",
     "@nestjs/typeorm": "^10.0.0",
-    "axios": "^1.6.0",
+    "axios": "^1.6.1",
     "chrono-node": "^2.7.0",
     "date-fns": "^2.30.0",
     "nest-winston": "^1.9.4",
