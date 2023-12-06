@@ -14,13 +14,13 @@
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@nestjs/axios": "^3.0.0",
+    "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^9.4.3",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.4.3",
-    "@nestjs/schedule": "^3.0.4",
+    "@nestjs/schedule": "^4.0.0",
     "@nestjs/typeorm": "^10.0.0",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "chrono-node": "^2.7.0",
     "date-fns": "^2.30.0",
     "nest-winston": "^1.9.4",
@@ -34,10 +34,10 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.1.18",
+    "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^9.4.3",
-    "@types/node": "20.8.7",
+    "@types/node": "20.8.9",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.52.0",
