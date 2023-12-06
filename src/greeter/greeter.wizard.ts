@@ -1,4 +1,12 @@
-import { Action, Ctx, Message, On, Wizard, WizardStep } from 'nestjs-telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  Message,
+  On,
+  Wizard,
+  WizardStep,
+} from 'nestjs-telegraf';
 import { MESSAGES, SELECT_GROUP } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
@@ -55,6 +63,7 @@ export class GreeterWizard {
   }
 
   @Action('cancel')
+  @Command('cancel')
   @WizardStep(3)
   async chancelSelectGroup(@Ctx() ctx: WizardContext) {
     ctx.wizard.back();

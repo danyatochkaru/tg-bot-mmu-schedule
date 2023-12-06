@@ -1,4 +1,12 @@
-import { Action, Ctx, Message, On, Wizard, WizardStep } from 'nestjs-telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  Message,
+  On,
+  Wizard,
+  WizardStep,
+} from 'nestjs-telegraf';
 import { MESSAGES, SELECT_LECTURER } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
@@ -26,6 +34,7 @@ export class LecturerWizard {
   }
 
   @Action('cancel')
+  @Command('cancel')
   @WizardStep(2)
   async backToMenu(@Ctx() ctx: WizardContext) {
     await ctx.scene.leave();
@@ -68,6 +77,7 @@ export class LecturerWizard {
   }
 
   @Action('cancel')
+  @Command('cancel')
   @WizardStep(3)
   async chancelSelectLecturer(@Ctx() ctx: WizardContext) {
     ctx.wizard.back();
