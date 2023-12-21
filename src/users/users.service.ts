@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -76,9 +76,18 @@ export class UsersService {
         username: user.username,
       })
         .then((r) => this.logger.log(`user info ${r.uid}: updated`))
-        .catch((err) =>
-          this.logger.error(`user info ${user.id}: update errored`, err),
-        );
+        .catch((err) => {
+          this.logger.error(`user info ${user.id}: update errored`);
+          this.logger.error(JSON.stringify(err, undefined, 2));
+        });
     }
+  }
+
+  findByGroupList(groupList: number[]) {
+    return this.userRepository.find({
+      where: {
+        group_id: In(groupList),
+      },
+    });
   }
 }

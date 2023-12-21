@@ -2,11 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const { timestamp, combine, printf, errors } = winston.format;
 
-  await NestFactory.createApplicationContext(AppModule, {
+  const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger({
       transports: [
         new winston.transports.File({
@@ -41,5 +42,21 @@ async function bootstrap() {
       ],
     }),
   });
+
+  app.setGlobalPrefix('api');
+  app.enableCors({
+    credentials: false,
+    origin: process.env.CORS_ORIGIN.split(','),
+  });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+    }),
+  );
+
+  await app.listen(5000);
 }
 bootstrap();

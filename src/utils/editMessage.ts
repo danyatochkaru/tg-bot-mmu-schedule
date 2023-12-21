@@ -1,6 +1,7 @@
 import { Context } from 'telegraf';
 import { ExtraEditMessageText } from 'telegraf/src/telegram-types';
 import { Logger } from '@nestjs/common';
+import { ApiError } from 'telegraf/types';
 
 function checkMessage(message: { message_id: number }) {
   if (!message) {
@@ -35,7 +36,13 @@ export async function editMessage(
       text,
       options,
     );
-  } catch (err: any) {
+  } catch (err: any | ApiError) {
+    if (err.hasOwnProperty('error_code')) {
+      if (err.error_code === 400) {
+        return false;
+      }
+    }
+
     logger.error(`Failed to edit message for ${ctx.chat.id}`);
     logger.error(err ?? 'Unknown error');
     return false;

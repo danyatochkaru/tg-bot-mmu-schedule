@@ -23,7 +23,7 @@ export const requestLecturerSchedule = (lecturer_id: number, date: Date) =>
     [
       Markup.button.callback(
         'Получить расписание',
-        `lecturer-${lecturer_id}-${formatDate(date)}-nm`,
+        `lecturer-${lecturer_id}-${formatDate(date)}-nm`, // nm = new message
       ),
     ],
     [Markup.button.callback('Выбрать другого', 'lecturer')],

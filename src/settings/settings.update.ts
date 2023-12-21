@@ -31,7 +31,7 @@ export class SettingsUpdate {
     if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
       await ctx
         .deleteMessage(ctx.callbackQuery.message.message_id)
-        .catch((err) => this.logger.error(err));
+        .catch((err) => err.error_code !== 400 && this.logger.error(err));
     }
     await ctx.scene.enter(SELECT_GROUP);
   }

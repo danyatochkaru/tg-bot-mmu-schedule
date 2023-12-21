@@ -9,5 +9,7 @@ declare namespace NodeJS {
     TYPEORM_DB: string;
     TYPEORM_PORT: number;
     ADMIN_IDS: string;
+    AUTH_TOKEN: string;
+    CORS_ORIGIN: string;
   }
 }

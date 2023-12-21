@@ -22,7 +22,7 @@ export class MenuUpdate {
         .reply(MESSAGES['ru'].MENU, {
           reply_markup: theMenu().reply_markup,
         })
-        .catch((err) => this.logger.error(err));
+        .catch((err) => this.logger.error(JSON.stringify(err, undefined, 2)));
     }
   }
 }

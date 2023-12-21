@@ -12,9 +12,15 @@ export class LecturerService {
 
   constructor(private readonly apiService: ApiService) {}
 
-  async getLecturerSchedule(lecturer_id: number, date: Date) {
-    const start = startOfWeek(date, { weekStartsOn: 1 });
-    const finish = endOfWeek(date, { weekStartsOn: 1 });
+  async getLecturerSchedule(
+    lecturer_id: number,
+    date: Date,
+    type: 'day' | 'week' = 'week',
+  ) {
+    const start =
+      type === 'day' ? date : startOfWeek(date, { weekStartsOn: 1 });
+    const finish =
+      type === 'day' ? start : endOfWeek(date, { weekStartsOn: 1 });
     return (await this.apiService.schedule({
       entity_id: lecturer_id,
       entity_type: 'lecturer',
@@ -25,7 +31,7 @@ export class LecturerService {
   prepareTextMessageForLecturer(data: LessonDto[], date = new Date()) {
     if (!data || !Array.isArray(data)) {
       this.logger.error(`[prepareTextMessageForLecturer] data is not array`);
-      this.logger.error(data);
+      this.logger.error(JSON.stringify(data, undefined, 2));
       return 'Произошла ошибка';
     }
 
@@ -46,6 +52,7 @@ export class LecturerService {
               cur.discipline
             }</b> (${cur.kindOfWork.substring(0, 3)}.)`,
         )
+        .filter((i, p, a) => a.indexOf(i) == p)
         .join('\n');
     }
 

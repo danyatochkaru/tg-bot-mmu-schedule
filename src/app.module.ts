@@ -11,6 +11,8 @@ import { SettingsModule } from './settings/settings.module';
 import { GreeterModule } from './greeter/greeter.module';
 import { ApiModule } from './api/api.module';
 import { LecturerModule } from './lecturer/lecturer.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { AuthModule } from './auth/auth.module';
 
 const sessions = new LocalSession();
 
@@ -25,6 +27,9 @@ const sessions = new LocalSession();
       useFactory: async (configService: ConfigService) => ({
         token: configService.get<string>('TOKEN'),
         middlewares: [sessions.middleware()],
+        options: {
+          handlerTimeout: 9000000,
+        },
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -49,6 +54,8 @@ const sessions = new LocalSession();
     UsersModule,
     ApiModule,
     LecturerModule,
+    NotificationsModule,
+    AuthModule,
   ],
   providers: [AppUpdate],
 })

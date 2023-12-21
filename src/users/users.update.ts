@@ -57,7 +57,10 @@ export class UsersUpdate {
               ?.reply_to_message.entities,
           },
         )
-        .catch((err) => this.logger.error('Error sending message', err));
+        .catch((err) => {
+          this.logger.error('Error sending message');
+          this.logger.error(JSON.stringify(err, undefined, 2));
+        });
     }
   }
 }
