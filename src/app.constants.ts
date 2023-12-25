@@ -8,7 +8,7 @@ export const MESSAGES = {
         MESSAGES['ru'].SETTINGS
       }`,
     ALREADY_REGISTERED:
-      'Ты уже зарегистрирован!\n\nДля вызова меню напиши /menu',
+      'Ты уже зарегистрирован(а)!\n\nДля вызова меню напиши /menu',
     ATTACHED_MESSAGE_FOR_MAILING_NOT_FOUND:
       'Нет прикреплённого сообщения или текста для рассылки',
     CANCEL_SEARCH: 'Поиск отменён\n\nДля вызова меню напиши /menu',
@@ -44,8 +44,8 @@ export const MESSAGES = {
       'через месяц\n' +
       'в следующий четверг\n' +
       '06.09.2023\n',
-    LECTURER_SELECTED: (group_name: string) =>
-      `Выбран преподаватель <b>${group_name}</b>`,
+    LECTURER_SELECTED: (lecturer_name: string) =>
+      `Выбран преподаватель <b>${lecturer_name}</b>`,
     MAILING_UNSUBSCRIBE_INFO: 'Отписаться от рассылкии можно в настройках бота',
     MANY_GROUPS_FOUND: 'Найдено слишком много групп. Напиши поточнее',
     MANY_LECTURERS_FOUND:
@@ -65,7 +65,8 @@ export const MESSAGES = {
     SEARCHING: 'Идёт поиск...',
     SELECT_GROUP: 'Выбери группу:',
     SELECT_LECTURER: 'Выбери преподавателя:',
-    SETTINGS: 'Настройки',
+    SETTINGS:
+      '<b>Настройки</b>\n\n&#8226; Сменить группу - показывать расписание для другой группы\n&#8226; Подробная неделя - показывать больше информации в расписании на неделю. <i>(напр. время, преподаватели)</i>',
     UNKNOWN_DATES_SCHEDULE:
       'Я не могу распознать дни, которые ты хочешь увидеть.\n\n' +
       'Я понимаю такие сообщения, как `расписание на завтра`, `расписание через неделю`, `расписание на среду и пятницу` и т.п.\n' +

@@ -23,6 +23,7 @@ export class SettingsUpdate {
 
     await editMessage(ctx, MESSAGES['ru'].SETTINGS, {
       reply_markup: settingsController({ user }).reply_markup,
+      parse_mode: 'HTML',
     });
   }
 

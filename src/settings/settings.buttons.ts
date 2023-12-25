@@ -15,12 +15,14 @@ export function settingsController({ user }: { user: Partial<UserEntity> }) {
         `change-detail-week=${!user.detail_week}`,
       ),
     ],
+    /* Временно неактуально
     [
       Markup.button.callback(
         `Получать рассылку | ${user.allow_mailing ? 'Вкл' : 'Выкл'}`,
         `toggle_allow_mailing=${!user.allow_mailing}`,
       ),
     ],
+    */
     [Markup.button.callback('Меню', 'menu')],
   ]);
 }
