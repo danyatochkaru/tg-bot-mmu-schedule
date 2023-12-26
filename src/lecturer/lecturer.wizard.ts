@@ -50,17 +50,38 @@ export class LecturerWizard {
     });
 
     if (lecturers instanceof Error) {
-      await editMessage(ctx, MESSAGES['ru'].ERROR_RETRY, {}, message);
+      await editMessage(
+        ctx,
+        MESSAGES['ru'].ERROR_RETRY,
+        {
+          reply_markup: searchingLecturerList([]).reply_markup,
+        },
+        message,
+      );
       return;
     }
 
     if (!lecturers.length) {
-      await editMessage(ctx, MESSAGES['ru'].NO_LECTURER_FOUND, {}, message);
+      await editMessage(
+        ctx,
+        MESSAGES['ru'].NO_LECTURER_FOUND,
+        {
+          reply_markup: searchingLecturerList([]).reply_markup,
+        },
+        message,
+      );
       return;
     }
 
     if (lecturers.length > 8) {
-      await editMessage(ctx, MESSAGES['ru'].MANY_LECTURERS_FOUND, {}, message);
+      await editMessage(
+        ctx,
+        MESSAGES['ru'].MANY_LECTURERS_FOUND,
+        {
+          reply_markup: searchingLecturerList([]).reply_markup,
+        },
+        message,
+      );
       return;
     }
 
