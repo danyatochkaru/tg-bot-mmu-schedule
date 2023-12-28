@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
+import * as telegramifyMarkdown from 'telegramify-markdown';
 
 @Injectable()
 export class NotificationsService {
@@ -63,17 +64,12 @@ export class NotificationsService {
     };
 
     const rejected: Rejected[] = [];
-    const studentsCountByGroup: Record<number, number> = {};
 
-    for (const groupId of groupList) {
-      studentsCountByGroup[groupId] = users.filter(
-        (u) => u.group_id === groupId,
-      ).length;
-    }
+    const preparedText = telegramifyMarkdown(text);
 
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);
-    const sendingResult = await this.sendMessageByList(list, text);
+    const sendingResult = await this.sendMessageByList(list, preparedText);
 
     rejected.push(...sendingResult.rejected);
 
@@ -89,7 +85,7 @@ export class NotificationsService {
           .map((r) => r.reason.on.payload.chat_id);
 
         rejected.length = 0;
-        const retryResult = await this.sendMessageByList(toRetry, text);
+        const retryResult = await this.sendMessageByList(toRetry, preparedText);
         rejected.push(...retryResult.rejected);
       }
     }
@@ -107,7 +103,9 @@ export class NotificationsService {
         chat_id: i.reason.on.payload.chat_id,
       })),
       totalUsers: users.length,
-      studentsCountByGroup,
+      studentsCountByGroup: (
+        await this.usersService.getCountByGroups(groupList, users)
+      ).groups,
     });
     this.lastResults.length > 10 && this.lastResults.shift();
     return this.lastResults.slice(-1);

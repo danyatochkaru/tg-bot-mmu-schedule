@@ -90,4 +90,17 @@ export class UsersService {
       },
     });
   }
+
+  async getCountByGroups(groupList: number[], users?: UserEntity[]) {
+    const usersFromDB = users ?? (await this.findByGroupList(groupList));
+
+    const studentsCountByGroup: Record<number, number> = {};
+    for (const groupId of groupList) {
+      studentsCountByGroup[groupId] = usersFromDB.filter(
+        (u) => u.group_id === Number(groupId),
+      ).length;
+    }
+
+    return { groups: studentsCountByGroup, total: usersFromDB.length };
+  }
 }

@@ -10,11 +10,11 @@ import { NotificationsService } from './notifications.service';
 import { NewNotification } from './notifications.interface';
 import { AuthGuard } from '../auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @UseGuards(AuthGuard)
   @Get('status')
   getNotificationsInfo() {
     return {
@@ -24,7 +24,6 @@ export class NotificationsController {
     };
   }
 
-  @UseGuards(AuthGuard)
   @Post()
   sendNotifications(@Body() newNotification: NewNotification) {
     if (this.notificationsService.isRunning) {
