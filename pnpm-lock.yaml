@@ -42,8 +42,8 @@ dependencies:
     specifier: ^0.14.0
     version: 0.14.0
   date-fns:
-    specifier: ^2.30.0
-    version: 2.30.0
+    specifier: ^3.1.0
+    version: 3.1.0
   nest-winston:
     specifier: ^1.9.4
     version: 1.9.4(@nestjs/common@10.3.0)(winston@3.11.0)
@@ -1636,6 +1636,10 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.6
+    dev: false
+
+  /date-fns@3.1.0:
+    resolution: {integrity: sha512-ZO7yefXV/wCWzd3I9haCHmfzlfA3i1a2HHO7ZXjtJrRjXt8FULKJ2Vl8wji3XYF4dQ0ZJ/tokXDZeYlFvgms9Q==}
     dev: false
 
   /dayjs@1.11.10:
