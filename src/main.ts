@@ -43,11 +43,7 @@ async function bootstrap() {
     }),
   });
 
-  app.setGlobalPrefix('api');
-  app.enableCors({
-    credentials: false,
-    origin: process.env.CORS_ORIGIN.split(','),
-  });
+  app.setGlobalPrefix('bot-api');
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true,
