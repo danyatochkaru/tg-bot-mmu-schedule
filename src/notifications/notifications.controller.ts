@@ -30,9 +30,14 @@ export class NotificationsController {
       throw new MethodNotAllowedException('Already is running. Try later...');
     }
 
+    console.log('newNotification.doLinkPreview', newNotification.doLinkPreview);
+
     this.notificationsService.sendNotifies(
       newNotification.groups,
       newNotification.text,
+      {
+        doLinkPreview: newNotification.doLinkPreview,
+      },
     );
 
     return 'ok';

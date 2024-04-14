@@ -33,7 +33,13 @@ export class NotificationsService {
     this.lastResults = [];
   }
 
-  async sendNotifies(groupList: number[], text: string) {
+  async sendNotifies(
+    groupList: number[],
+    text: string,
+    options?: {
+      doLinkPreview?: boolean;
+    },
+  ) {
     if (this.isRunning) {
       throw new CanceledError('Already is running. Try later...');
     }
@@ -69,7 +75,9 @@ export class NotificationsService {
 
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);
-    const sendingResult = await this.sendMessageByList(list, preparedText);
+    const sendingResult = await this.sendMessageByList(list, preparedText, {
+      doLinkPreview: options.doLinkPreview ?? true,
+    });
 
     rejected.push(...sendingResult.rejected);
 
@@ -85,7 +93,13 @@ export class NotificationsService {
           .map((r) => r.reason.on.payload.chat_id);
 
         rejected.length = 0;
-        const retryResult = await this.sendMessageByList(toRetry, preparedText);
+        const retryResult = await this.sendMessageByList(
+          toRetry,
+          preparedText,
+          {
+            doLinkPreview: options.doLinkPreview ?? true,
+          },
+        );
         rejected.push(...retryResult.rejected);
       }
     }
@@ -116,6 +130,7 @@ export class NotificationsService {
     text: string,
     options?: {
       requestsPerCycle?: number;
+      doLinkPreview?: boolean;
     },
   ) {
     const rejected = [];
@@ -126,10 +141,13 @@ export class NotificationsService {
 
       const startTime = Date.now();
 
+      console.log('options.doLinkPreview', options.doLinkPreview);
+
       await Promise.allSettled(
         preparedList.map((item) => {
           return this.bot.telegram.sendMessage(item, text, {
             parse_mode: 'MarkdownV2',
+            disable_web_page_preview: !options.doLinkPreview,
           });
         }),
       ).then((results) =>

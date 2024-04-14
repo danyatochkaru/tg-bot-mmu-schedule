@@ -1,7 +1,9 @@
 import {
   IsArray,
+  IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
 } from 'class-validator';
@@ -15,4 +17,8 @@ export class NewNotification {
   @IsString()
   @IsNotEmpty()
   text: string;
+
+  @IsBoolean()
+  @IsOptional()
+  doLinkPreview: boolean;
 }

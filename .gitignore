@@ -43,3 +43,5 @@ session_db.json
 # dev docker
 dev.docker-compose.yml
 dev.Dockerfile
+
+pgdata
