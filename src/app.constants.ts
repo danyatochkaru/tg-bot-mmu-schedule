@@ -51,6 +51,7 @@ export const MESSAGES = {
     MANY_LECTURERS_FOUND:
       'Найдено слишком много преподавателей. Напиши поточнее',
     MENU: 'Меню',
+    FLOOR_MENU: 'Выбери этаж',
     NOT_REGISTERED: 'Вы не зарегистрированы',
     NOT_REGISTERED_FOR_SETTINGS:
       'Чтобы что-то менять, нужно сначала это что-то создать. Пройти регистрацию: /start',

@@ -141,8 +141,6 @@ export class NotificationsService {
 
       const startTime = Date.now();
 
-      console.log('options.doLinkPreview', options.doLinkPreview);
-
       await Promise.allSettled(
         preparedList.map((item) => {
           return this.bot.telegram.sendMessage(item, text, {

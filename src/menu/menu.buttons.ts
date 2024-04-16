@@ -8,6 +8,7 @@ export const theMenu = () =>
       Markup.button.callback('На неделю', `week-current`),
     ],
     [Markup.button.callback('Преподаватель', 'lecturer')],
+    [Markup.button.callback('Карта', 'floor-maps')],
     [Markup.button.url('Сайт с расписанием', `https://schedule.mi.university`)],
     [
       Markup.button.callback('Настройки', `settings`),

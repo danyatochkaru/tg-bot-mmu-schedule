@@ -13,6 +13,8 @@ import { ApiModule } from './api/api.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
+import { FileModule } from './file/file.module';
+import { FloorMapsModule } from './floor-maps/floor-maps.module';
 
 const sessions = new LocalSession();
 
@@ -56,6 +58,8 @@ const sessions = new LocalSession();
     LecturerModule,
     NotificationsModule,
     AuthModule,
+    FileModule,
+    FloorMapsModule,
   ],
   providers: [AppUpdate],
 })

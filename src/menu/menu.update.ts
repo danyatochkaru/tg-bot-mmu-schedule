@@ -1,4 +1,4 @@
-import { Action, Command, Ctx, Update } from 'nestjs-telegraf';
+import { Action, Command, Ctx, Hears, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { theMenu } from './menu.buttons';
 import { editMessage } from '../utils/editMessage';
@@ -10,10 +10,15 @@ import { Logger } from '@nestjs/common';
 export class MenuUpdate {
   private logger = new Logger(MenuUpdate.name);
 
-  @Command(/menu/i)
+  @Hears(/^меню$/i)
+  @Command(/^menu$/i)
   @Action('menu')
   async sendMenu(@Ctx() ctx: Context) {
-    if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
+    if (
+      ctx.callbackQuery &&
+      'data' in ctx.callbackQuery &&
+      'text' in ctx.callbackQuery.message
+    ) {
       await editMessage(ctx, MESSAGES['ru'].MENU, {
         reply_markup: theMenu().reply_markup,
       });
