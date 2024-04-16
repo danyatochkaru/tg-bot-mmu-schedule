@@ -4,10 +4,13 @@ import { Context } from 'telegraf';
 import { editMessage } from '../utils/editMessage';
 import { MESSAGES } from '../app.constants';
 import { floorMapsMenuButtons } from './floor-maps.buttons';
+import { ConfigService } from '@nestjs/config';
 
 @Update()
 export class FloorMapsUpdate {
   private logger = new Logger(FloorMapsUpdate.name);
+
+  constructor(private readonly configService: ConfigService) {}
 
   @Hears(/^карта$/i)
   @Action('floor-maps')
@@ -31,7 +34,7 @@ export class FloorMapsUpdate {
     if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
       await ctx.replyWithPhoto(
         {
-          url: `http://192.168.0.107:5050/bot-api/file/${ctx.callbackQuery.data}.jpg`,
+          url: `${this.configService.get('STATIC_BASE_URL')}/file/${ctx.callbackQuery.data}.jpg`,
         },
         { reply_markup: floorMapsMenuButtons().reply_markup },
       );
@@ -44,7 +47,7 @@ export class FloorMapsUpdate {
 
       await ctx.replyWithPhoto(
         {
-          url: `http://192.168.0.107:5050/bot-api/file/floor-${floor[0]}.jpg`,
+          url: `${this.configService.get('STATIC_BASE_URL')}/file/floor-${floor[0]}.jpg`,
         },
         { reply_markup: floorMapsMenuButtons().reply_markup },
       );
@@ -58,7 +61,7 @@ export class FloorMapsUpdate {
         type: 'photo',
         caption: `${index + 1} этаж`,
         media: {
-          url: `http://192.168.0.107:5050/bot-api/file/floor-${index + 1}.jpg`,
+          url: `${this.configService.get('STATIC_BASE_URL')}/file/floor-${index + 1}.jpg`,
         },
       })),
     );
