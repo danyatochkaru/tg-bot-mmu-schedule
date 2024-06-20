@@ -11,5 +11,6 @@ declare namespace NodeJS {
     ADMIN_IDS: string;
     AUTH_TOKEN: string;
     CORS_ORIGIN: string;
+    STATIC_BASE_URL: string;
   }
 }

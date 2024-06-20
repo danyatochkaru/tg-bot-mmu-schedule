@@ -49,6 +49,7 @@ export class SettingsUpdate {
       MESSAGES['ru'].DETAIL_WEEK_SWITCHED(updated_user.detail_week),
       {
         reply_markup: settingsController({ user: updated_user }).reply_markup,
+        parse_mode: 'HTML',
       },
     );
   }
