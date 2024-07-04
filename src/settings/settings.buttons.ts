@@ -15,6 +15,12 @@ export function settingsController({ user }: { user: Partial<UserEntity> }) {
         `change-detail-week=${!user.detail_week}`,
       ),
     ],
+    [
+      Markup.button.callback(
+        `Ссылка на группу | ${user.group_name}`,
+        `link-w-group`,
+      ),
+    ],
     /* Временно неактуально
     [
       Markup.button.callback(

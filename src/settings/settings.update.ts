@@ -3,8 +3,9 @@ import { Context } from 'telegraf';
 import { editMessage } from '../utils/editMessage';
 import { settingsController } from './settings.buttons';
 import { UsersService } from '../users/users.service';
-import { MESSAGES, SELECT_GROUP } from '../app.constants';
+import { MESSAGES, SELECT_GROUP, TRANSLIT_ALPHABET } from '../app.constants';
 import { Logger } from '@nestjs/common';
+import Transliterator from '../utils/transliterator';
 
 @Update()
 // @UseInterceptors(new LoggingInterceptor())
@@ -66,6 +67,28 @@ export class SettingsUpdate {
       MESSAGES['ru'].ALLOW_MAILING_CHANGED(updated_user.allow_mailing),
       {
         reply_markup: settingsController({ user: updated_user }).reply_markup,
+      },
+    );
+  }
+
+  @Action('link-w-group')
+  async getLinkWithGroup(@Ctx() ctx: Context) {
+    const user = await this.usersService.getInfo(ctx.from.id);
+
+    if (!user) {
+      await editMessage(ctx, MESSAGES['ru'].NOT_REGISTERED_FOR_SETTINGS);
+      return;
+    }
+    const transliterator = new Transliterator(TRANSLIT_ALPHABET);
+
+    await ctx.reply(
+      MESSAGES['ru'].LINK_WITH_GROUP(
+        ctx.botInfo.username,
+        transliterator.decode(user.group_name),
+      ),
+      {
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
       },
     );
   }

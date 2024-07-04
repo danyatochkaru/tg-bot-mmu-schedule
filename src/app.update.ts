@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { MESSAGES, SELECT_GROUP, TRANSLIT_ALPHABET } from './app.constants';
 import { UsersService } from './users/users.service';
 import { ApiService } from './api/api.service';
+import Transliterator from './utils/transliterator';
 
 @Update()
 export class AppUpdate {
@@ -18,8 +19,6 @@ export class AppUpdate {
   ) {
     await ctx.reply(MESSAGES.ru.GREETING);
 
-    console.log(msg);
-
     if (msg && msg.text.split(' ').length > 1) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_start, ...params] = msg.text.split(' ');
@@ -29,16 +28,10 @@ export class AppUpdate {
         if (key && value) {
           if (key === 'group') {
             if (isNaN(Number(value))) {
-              const translitted_group = value
-                .split('')
-                .reduce(
-                  (acc, value) =>
-                    acc + (TRANSLIT_ALPHABET['en_ru'][value] ?? value),
-                  '',
-                );
+              const transliterator = new Transliterator(TRANSLIT_ALPHABET);
 
               const groups = await this.apiService.search({
-                payload: { term: translitted_group, type: 'group' },
+                payload: { term: transliterator.encode(value), type: 'group' },
               });
 
               if (Array.isArray(groups) && groups.length === 1) {
