@@ -11,6 +11,7 @@ import Transliterator from '../utils/transliterator';
 // @UseInterceptors(new LoggingInterceptor())
 export class SettingsUpdate {
   private logger = new Logger(SettingsUpdate.name);
+  private transliterator = new Transliterator(TRANSLIT_ALPHABET);
 
   constructor(private readonly usersService: UsersService) {}
   @Action('settings')
@@ -23,7 +24,9 @@ export class SettingsUpdate {
     }
 
     await editMessage(ctx, MESSAGES['ru'].SETTINGS, {
-      reply_markup: settingsController({ user }).reply_markup,
+      reply_markup: settingsController({
+        user,
+      }).reply_markup,
       parse_mode: 'HTML',
     });
   }
@@ -49,7 +52,9 @@ export class SettingsUpdate {
       ctx,
       MESSAGES['ru'].DETAIL_WEEK_SWITCHED(updated_user.detail_week),
       {
-        reply_markup: settingsController({ user: updated_user }).reply_markup,
+        reply_markup: settingsController({
+          user: updated_user,
+        }).reply_markup,
         parse_mode: 'HTML',
       },
     );
@@ -66,7 +71,9 @@ export class SettingsUpdate {
       ctx,
       MESSAGES['ru'].ALLOW_MAILING_CHANGED(updated_user.allow_mailing),
       {
-        reply_markup: settingsController({ user: updated_user }).reply_markup,
+        reply_markup: settingsController({
+          user: updated_user,
+        }).reply_markup,
       },
     );
   }
@@ -79,16 +86,17 @@ export class SettingsUpdate {
       await editMessage(ctx, MESSAGES['ru'].NOT_REGISTERED_FOR_SETTINGS);
       return;
     }
-    const transliterator = new Transliterator(TRANSLIT_ALPHABET);
 
     await ctx.reply(
       MESSAGES['ru'].LINK_WITH_GROUP(
         ctx.botInfo.username,
-        transliterator.decode(user.group_name),
+        this.transliterator.decode(user.group_name),
       ),
       {
         parse_mode: 'HTML',
-        disable_web_page_preview: true,
+        link_preview_options: {
+          is_disabled: true
+        }
       },
     );
   }
