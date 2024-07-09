@@ -1,6 +1,10 @@
 import { Ctx, Help, Message, Start, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
-import { MESSAGES, SELECT_GROUP, TRANSLIT_ALPHABET } from './app.constants';
+import {
+  MESSAGES,
+  SELECT_GROUP_WIZARD,
+  TRANSLIT_ALPHABET,
+} from './app.constants';
 import { UsersService } from './users/users.service';
 import { ApiService } from './api/api.service';
 import Transliterator from './utils/transliterator';
@@ -67,7 +71,7 @@ export class AppUpdate {
     }
     const user = await this.usersService.getInfo(ctx.from.id);
     if (!user) {
-      await ctx.scene.enter(SELECT_GROUP);
+      await ctx.scene.enter(SELECT_GROUP_WIZARD);
     } else {
       await ctx.reply(MESSAGES['ru'].ALREADY_REGISTERED);
     }

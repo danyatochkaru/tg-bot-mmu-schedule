@@ -3,7 +3,11 @@ import { Context } from 'telegraf';
 import { editMessage } from '../utils/editMessage';
 import { settingsController } from './settings.buttons';
 import { UsersService } from '../users/users.service';
-import { MESSAGES, SELECT_GROUP, TRANSLIT_ALPHABET } from '../app.constants';
+import {
+  MESSAGES,
+  SELECT_GROUP_WIZARD,
+  TRANSLIT_ALPHABET,
+} from '../app.constants';
 import { Logger } from '@nestjs/common';
 import Transliterator from '../utils/transliterator';
 
@@ -38,7 +42,7 @@ export class SettingsUpdate {
         .deleteMessage(ctx.callbackQuery.message.message_id)
         .catch((err) => err.error_code !== 400 && this.logger.error(err));
     }
-    await ctx.scene.enter(SELECT_GROUP);
+    await ctx.scene.enter(SELECT_GROUP_WIZARD);
   }
 
   @Action(/change-detail-week/i)
@@ -95,8 +99,8 @@ export class SettingsUpdate {
       {
         parse_mode: 'HTML',
         link_preview_options: {
-          is_disabled: true
-        }
+          is_disabled: true,
+        },
       },
     );
   }

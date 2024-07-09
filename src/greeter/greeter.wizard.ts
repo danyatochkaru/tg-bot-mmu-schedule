@@ -7,14 +7,14 @@ import {
   Wizard,
   WizardStep,
 } from 'nestjs-telegraf';
-import { MESSAGES, SELECT_GROUP } from '../app.constants';
+import { MESSAGES, SELECT_GROUP_WIZARD } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
 import { ApiService } from '../api/api.service';
 
-@Wizard(SELECT_GROUP)
+@Wizard(SELECT_GROUP_WIZARD)
 export class GreeterWizard {
   constructor(
     private readonly usersService: UsersService,

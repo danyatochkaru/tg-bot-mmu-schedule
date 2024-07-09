@@ -1,5 +1,5 @@
-export const SELECT_GROUP = 'select-group';
-export const SELECT_LECTURER = 'select-lecturer';
+export const SELECT_GROUP_WIZARD = 'select-group';
+export const SELECT_LECTURER_WIZARD = 'select-lecturer';
 
 export const MESSAGES = {
   ru: {

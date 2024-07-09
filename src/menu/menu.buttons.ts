@@ -1,10 +1,6 @@
 import { Markup } from 'telegraf';
 
-export const theMenu = ({
-                          link,
-                        }: {
-  link: string;
-}) =>
+export const theMenu = ({ link }: { link: string }) =>
   Markup.inlineKeyboard([
     [
       Markup.button.callback('На день', `day-current`),

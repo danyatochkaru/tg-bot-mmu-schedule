@@ -146,8 +146,8 @@ export class NotificationsService {
           return this.bot.telegram.sendMessage(item, text, {
             parse_mode: 'MarkdownV2',
             link_preview_options: {
-              is_disabled: !options.doLinkPreview
-            }
+              is_disabled: !options.doLinkPreview,
+            },
           });
         }),
       ).then((results) =>

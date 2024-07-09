@@ -26,7 +26,6 @@ export class MenuUpdate {
       'data' in ctx.callbackQuery &&
       'text' in ctx.callbackQuery.message
     ) {
-
       await editMessage(ctx, MESSAGES['ru'].MENU, {
         reply_markup: theMenu({
           link: `t.me/${ctx.botInfo.username}?start${user ? `=group_${this.transliterator.decode(user.group_name)}` : ''}`,
