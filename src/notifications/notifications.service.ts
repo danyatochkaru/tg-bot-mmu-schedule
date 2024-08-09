@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
-import * as telegramifyMarkdown from 'telegramify-markdown';
+import telegramifyMarkdown from 'telegramify-markdown';
 import { NewNotification } from './notifications.interface';
 
 @Injectable()
@@ -73,7 +73,7 @@ export class NotificationsService {
 
     const rejected: Rejected[] = [];
 
-    const preparedText = telegramifyMarkdown(text);
+    const preparedText = telegramifyMarkdown(text, 'remove');
 
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);
@@ -153,7 +153,11 @@ export class NotificationsService {
           });
         }),
       ).then((results) =>
-        results.forEach((r) => r.status === 'rejected' && rejected.push(r)),
+        results.forEach((r) => {
+          if (r.status === 'rejected') {
+            rejected.push(r);
+          }
+        }),
       );
       const timeLeft = Date.now() - startTime;
       i + requestsPerCycle < list.length &&
