@@ -101,6 +101,15 @@ export class UsersService {
       ).length;
     }
 
-    return { groups: studentsCountByGroup, total: usersFromDB.length };
+    const inactive = usersFromDB.reduce(
+      (acc, cur) => acc + (cur.is_inactive ? 1 : 0),
+      0,
+    );
+
+    return {
+      groups: studentsCountByGroup,
+      inactive,
+      total: usersFromDB.length,
+    };
   }
 }

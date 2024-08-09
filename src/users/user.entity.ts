@@ -35,6 +35,12 @@ export class UserEntity {
   @Column({ default: true })
   allow_mailing?: boolean;
 
+  @Column({ default: false })
+  is_inactive?: boolean;
+
+  @Column({ nullable: true })
+  inactive_reason?: string;
+
   @UpdateDateColumn()
   updated_at: Date;
 
