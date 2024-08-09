@@ -11,6 +11,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: async (config: ConfigService) => ({
         baseURL: `https://${config.get('AUTH')}@${config.get('URL')}`,
         timeout: 1000 * 20,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       }),
     }),
   ],

@@ -10,7 +10,7 @@ export const theMenu = ({ link }: { link: string }) =>
     [Markup.button.callback('Преподаватель', 'lecturer')],
     [Markup.button.callback('Карта', 'floor-maps')],
     [
-      Markup.button.url('Сайт РУЗ', `https://schedule.mi.university`),
+      Markup.button.url('ЛК', `https://elearn.mmu.ru`),
       Markup.button.switchToChat(
         `Поделиться`,
         `\n\nЯ пользуюсь ботом с расписанием занятий ММУ и хочу поделиться им с Вами! Переходите по ссылке ниже и Вы сразу сможете получать расписание нашей группы:\n${link}`,
