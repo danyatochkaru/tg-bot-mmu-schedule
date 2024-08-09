@@ -3,13 +3,19 @@ import { Context } from 'telegraf';
 import { editMessage } from '../utils/editMessage';
 import { settingsController } from './settings.buttons';
 import { UsersService } from '../users/users.service';
-import { MESSAGES, SELECT_GROUP } from '../app.constants';
+import {
+  MESSAGES,
+  SELECT_GROUP_WIZARD,
+  TRANSLIT_ALPHABET,
+} from '../app.constants';
 import { Logger } from '@nestjs/common';
+import Transliterator from '../utils/transliterator';
 
 @Update()
 // @UseInterceptors(new LoggingInterceptor())
 export class SettingsUpdate {
   private logger = new Logger(SettingsUpdate.name);
+  private transliterator = new Transliterator(TRANSLIT_ALPHABET);
 
   constructor(private readonly usersService: UsersService) {}
   @Action('settings')
@@ -22,7 +28,9 @@ export class SettingsUpdate {
     }
 
     await editMessage(ctx, MESSAGES['ru'].SETTINGS, {
-      reply_markup: settingsController({ user }).reply_markup,
+      reply_markup: settingsController({
+        user,
+      }).reply_markup,
       parse_mode: 'HTML',
     });
   }
@@ -34,7 +42,7 @@ export class SettingsUpdate {
         .deleteMessage(ctx.callbackQuery.message.message_id)
         .catch((err) => err.error_code !== 400 && this.logger.error(err));
     }
-    await ctx.scene.enter(SELECT_GROUP);
+    await ctx.scene.enter(SELECT_GROUP_WIZARD);
   }
 
   @Action(/change-detail-week/i)
@@ -48,7 +56,9 @@ export class SettingsUpdate {
       ctx,
       MESSAGES['ru'].DETAIL_WEEK_SWITCHED(updated_user.detail_week),
       {
-        reply_markup: settingsController({ user: updated_user }).reply_markup,
+        reply_markup: settingsController({
+          user: updated_user,
+        }).reply_markup,
         parse_mode: 'HTML',
       },
     );
@@ -65,7 +75,32 @@ export class SettingsUpdate {
       ctx,
       MESSAGES['ru'].ALLOW_MAILING_CHANGED(updated_user.allow_mailing),
       {
-        reply_markup: settingsController({ user: updated_user }).reply_markup,
+        reply_markup: settingsController({
+          user: updated_user,
+        }).reply_markup,
+      },
+    );
+  }
+
+  @Action('link-w-group')
+  async getLinkWithGroup(@Ctx() ctx: Context) {
+    const user = await this.usersService.getInfo(ctx.from.id);
+
+    if (!user) {
+      await editMessage(ctx, MESSAGES['ru'].NOT_REGISTERED_FOR_SETTINGS);
+      return;
+    }
+
+    await ctx.reply(
+      MESSAGES['ru'].LINK_WITH_GROUP(
+        ctx.botInfo.username,
+        this.transliterator.decode(user.group_name),
+      ),
+      {
+        parse_mode: 'HTML',
+        link_preview_options: {
+          is_disabled: true,
+        },
       },
     );
   }

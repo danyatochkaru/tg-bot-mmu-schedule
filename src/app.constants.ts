@@ -1,5 +1,5 @@
-export const SELECT_GROUP = 'select-group';
-export const SELECT_LECTURER = 'select-lecturer';
+export const SELECT_GROUP_WIZARD = 'select-group';
+export const SELECT_LECTURER_WIZARD = 'select-lecturer';
 
 export const MESSAGES = {
   ru: {
@@ -73,5 +73,40 @@ export const MESSAGES = {
       'Я не могу распознать дни, которые ты хочешь увидеть.\n\n' +
       'Я понимаю такие сообщения, как `расписание на завтра`, `расписание через неделю`, `расписание на среду и пятницу` и т.п.\n' +
       'Также ты можешь написать дату или отрезок времени (например, `расписание на 1 сернтября - 9 сентября`)',
+    LINK_WITH_GROUP: (bot_name: string, group: string) =>
+      `Отправь эту ссылку одногруппникам - <code>t.me/${bot_name}?start=group_${group}</code>`,
   },
+};
+
+export const TRANSLIT_ALPHABET = {
+  a: 'а',
+  b: 'б',
+  v: 'в',
+  g: 'г',
+  d: 'д',
+  e: 'е',
+  zh: 'ж',
+  z: 'з',
+  i: 'и',
+  j: 'й',
+  k: 'к',
+  l: 'л',
+  m: 'м',
+  n: 'н',
+  o: 'о',
+  p: 'п',
+  r: 'р',
+  s: 'с',
+  t: 'т',
+  u: 'у',
+  f: 'ф',
+  h: 'х',
+  c: 'ц',
+  ch: 'ч',
+  sh: 'ш',
+  sch: 'щ',
+  y: 'ы',
+  ey: 'э',
+  uy: 'ю',
+  ya: 'я',
 };

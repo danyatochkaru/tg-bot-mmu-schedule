@@ -1,6 +1,6 @@
 import { Action, Command, Ctx, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
-import { MESSAGES, SELECT_LECTURER } from '../app.constants';
+import { MESSAGES, SELECT_LECTURER_WIZARD } from '../app.constants';
 import { Logger } from '@nestjs/common';
 import { editMessage } from '../utils/editMessage';
 import { LecturerService } from './lecturer.service';
@@ -23,7 +23,7 @@ export class LecturerUpdate {
         .catch((err) => err.error_code !== 400 && this.logger.error(err));
     }
 
-    await ctx.scene.enter(SELECT_LECTURER);
+    await ctx.scene.enter(SELECT_LECTURER_WIZARD);
   }
 
   @Action(/lecturer-/i)

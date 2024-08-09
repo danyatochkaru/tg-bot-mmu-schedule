@@ -7,7 +7,7 @@ import {
   Wizard,
   WizardStep,
 } from 'nestjs-telegraf';
-import { MESSAGES, SELECT_LECTURER } from '../app.constants';
+import { MESSAGES, SELECT_LECTURER_WIZARD } from '../app.constants';
 import { WizardContext } from 'telegraf/typings/scenes';
 import { editMessage } from '../utils/editMessage';
 import { ApiService } from '../api/api.service';
@@ -18,7 +18,7 @@ import {
 } from './lecturer.buttons';
 import { LecturerService } from './lecturer.service';
 
-@Wizard(SELECT_LECTURER)
+@Wizard(SELECT_LECTURER_WIZARD)
 export class LecturerWizard {
   constructor(
     private readonly lecturerService: LecturerService,

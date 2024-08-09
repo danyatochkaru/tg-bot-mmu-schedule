@@ -145,7 +145,9 @@ export class NotificationsService {
         preparedList.map((item) => {
           return this.bot.telegram.sendMessage(item, text, {
             parse_mode: 'MarkdownV2',
-            disable_web_page_preview: !options.doLinkPreview,
+            link_preview_options: {
+              is_disabled: !options.doLinkPreview,
+            },
           });
         }),
       ).then((results) =>
