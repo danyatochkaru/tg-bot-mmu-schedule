@@ -30,7 +30,7 @@ export class UsersUpdate {
     await ctx.reply(MESSAGES['ru'].PROFILE_REMOVED);
   }
 
-  @Command('send')
+  // @Command('send')
   async doMailing(@Ctx() ctx: Context) {
     const users = await this.usersService.getListForMailing(
       String(ctx.from.id),

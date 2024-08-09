@@ -15,6 +15,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { FloorMapsModule } from './floor-maps/floor-maps.module';
+import * as https from 'node:https';
 
 const sessions = new LocalSession();
 
@@ -31,6 +32,11 @@ const sessions = new LocalSession();
         middlewares: [sessions.middleware()],
         options: {
           handlerTimeout: 9000000,
+          telegram: {
+            agent: new https.Agent({
+              keepAlive: false,
+            }),
+          },
         },
       }),
     }),

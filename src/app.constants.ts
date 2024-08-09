@@ -9,6 +9,7 @@ export const MESSAGES = {
       }`,
     ALREADY_REGISTERED:
       'Ты уже зарегистрирован(а)!\n\nДля вызова меню напиши /menu',
+    ACTIVITY_RESTORATION: 'С возвращением!\n\nДля вызова меню напиши /menu',
     ATTACHED_MESSAGE_FOR_MAILING_NOT_FOUND:
       'Нет прикреплённого сообщения или текста для рассылки',
     CANCEL_SEARCH: 'Поиск отменён\n\nДля вызова меню напиши /menu',

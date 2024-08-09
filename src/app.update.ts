@@ -72,9 +72,19 @@ export class AppUpdate {
     const user = await this.usersService.getInfo(ctx.from.id);
     if (!user) {
       await ctx.scene.enter(SELECT_GROUP_WIZARD);
-    } else {
-      await ctx.reply(MESSAGES['ru'].ALREADY_REGISTERED);
+      return;
     }
+
+    if (user.is_inactive) {
+      await this.usersService.editInfo(ctx.from.id, {
+        inactive_reason: null,
+        is_inactive: false,
+      });
+      await ctx.reply(MESSAGES['ru'].ACTIVITY_RESTORATION);
+      return;
+    }
+
+    await ctx.reply(MESSAGES['ru'].ALREADY_REGISTERED);
   }
 
   @Help()
