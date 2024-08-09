@@ -6,7 +6,25 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUrl,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class MediaPayload {
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+  @IsString()
+  @IsUrl()
+  @IsNotEmpty()
+  url: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isSpoiler?: boolean;
+}
 
 export class NewNotification {
   @IsArray()
@@ -21,4 +39,10 @@ export class NewNotification {
   @IsBoolean()
   @IsOptional()
   doLinkPreview: boolean;
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @IsArray()
+  @Type(() => MediaPayload)
+  media?: MediaPayload[];
 }

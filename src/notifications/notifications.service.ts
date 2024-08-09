@@ -4,6 +4,7 @@ import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
 import * as telegramifyMarkdown from 'telegramify-markdown';
+import { NewNotification } from './notifications.interface';
 
 @Injectable()
 export class NotificationsService {
@@ -34,10 +35,11 @@ export class NotificationsService {
   }
 
   async sendNotifies(
-    groupList: number[],
-    text: string,
+    groupList: NewNotification['groups'],
+    text: NewNotification['text'],
     options?: {
-      doLinkPreview?: boolean;
+      doLinkPreview?: NewNotification['doLinkPreview'];
+      media?: NewNotification['media'];
     },
   ) {
     if (this.isRunning) {

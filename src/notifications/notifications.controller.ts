@@ -35,6 +35,7 @@ export class NotificationsController {
       newNotification.text,
       {
         doLinkPreview: newNotification.doLinkPreview,
+        media: newNotification.media,
       },
     );
 
