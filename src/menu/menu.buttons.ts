@@ -8,7 +8,7 @@ export const theMenu = ({ link }: { link: string }) =>
       Markup.button.callback('На неделю', `week-current`),
     ],
     [Markup.button.callback('Преподаватель', 'lecturer')],
-    [Markup.button.callback('Карта', 'floor-maps')],
+    [Markup.button.callback('Карта ГК', 'floor-maps')],
     [
       Markup.button.url('ЛК', `https://elearn.mmu.ru`),
       Markup.button.switchToChat(
