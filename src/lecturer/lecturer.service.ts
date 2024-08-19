@@ -42,20 +42,6 @@ export class LecturerService {
       ].join('\n\n');
     }
 
-    function getFormattedLessons(lessons: LessonDto[]) {
-      return lessons
-        .map(
-          (cur) =>
-            `${cur.lessonNumberStart} | ${cur.beginLesson} - ${
-              cur.endLesson
-            } | <i>${cur.auditorium}</i>\n<b>${
-              cur.discipline
-            }</b> (${cur.kindOfWork.substring(0, 3)}.)`,
-        )
-        .filter((i, p, a) => a.indexOf(i) == p)
-        .join('\n');
-    }
-
     const _preparedData = this.getPreparedData(data);
 
     return [
@@ -64,12 +50,34 @@ export class LecturerService {
         .map((i) =>
           [
             this.getFormattedDate(new Date(i.day)),
-            getFormattedLessons(i.list),
+            this.getFormattedLessons(i.list),
           ].join('\n\n'),
         )
         .join('\n\n'),
       this.getWeekParity(new Date(_preparedData[0].day)),
     ].join('\n\n');
+  }
+
+  private getShortAuditorium(aud: string) {
+    const [corpus, cabinet] = aud.split('/');
+    return `${corpus
+      .split(' ')
+      .map((i) => i[0].toUpperCase())
+      .join('')} | ${cabinet}`;
+  }
+
+  private getFormattedLessons(lessons: LessonDto[]) {
+    return lessons
+      .map(
+        (cur) =>
+          `${cur.lessonNumberStart} | ${cur.beginLesson} - ${
+            cur.endLesson
+          } | <i>${this.getShortAuditorium(cur.auditorium)}</i>\n<b>${
+            cur.discipline
+          }</b> (${cur.kindOfWork.substring(0, 3)}.)`,
+      )
+      .filter((i, p, a) => a.indexOf(i) == p)
+      .join('\n');
   }
 
   private getFormattedDate(date: Date, count = 0) {

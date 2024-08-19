@@ -59,21 +59,6 @@ export class ScheduleService {
       ].join('\n\n');
     }
 
-    function getFormattedLessons(lessons: LessonDto[]) {
-      return lessons
-        .map((cur, index, arr) =>
-          index > 0 && arr[index - 1].beginLesson === cur.beginLesson
-            ? `${cur.auditorium} - ${cur.lecturer}`
-            : `\n${cur.lessonNumberStart} | ${cur.beginLesson} - ${
-                cur.endLesson
-              }\n<b>${cur.discipline}</b> (${cur.kindOfWork.substring(
-                0,
-                3,
-              )}.)\n${cur.auditorium} - ${cur.lecturer}`,
-        )
-        .join('\n');
-    }
-
     const _preparedData = this.getPreparedData(data);
 
     return [
@@ -81,7 +66,7 @@ export class ScheduleService {
         .map((i) =>
           [
             this.getFormattedDate(new Date(i.day)),
-            getFormattedLessons(i.list),
+            this.getFormattedLessons(i.list),
           ].join('\n'),
         )
         .join('\n\n'),
@@ -103,20 +88,6 @@ export class ScheduleService {
       ].join('\n\n');
     }
 
-    function getFormattedDays(lessons: LessonDto[]) {
-      return lessons
-        .map((cur, index, arr) =>
-          index > 0 && arr[index - 1].beginLesson === cur.beginLesson
-            ? `<i>, ${cur.auditorium}</i>`
-            : `\n${cur.lessonNumberStart} | <b>${
-                cur.discipline
-              }</b> (${cur.kindOfWork.substring(0, 3)}.) - <i>${
-                cur.auditorium
-              }</i>`,
-        )
-        .join('');
-    }
-
     const _preparedData = this.getPreparedData(data);
 
     return [
@@ -129,12 +100,49 @@ export class ScheduleService {
               //   .map((i) => `${i.lessonNumberStart}${i.discipline}`)
               //   .filter((x, i, a) => a.indexOf(x) === i).length,
             ),
-            getFormattedDays(i.list),
+            this.getFormattedDays(i.list),
           ].join('\n'),
         )
         .join('\n\n'),
       this.getWeekParity(new Date(_preparedData[0].day)),
     ].join('\n\n');
+  }
+
+  private getFormattedLessons(lessons: LessonDto[]) {
+    return lessons
+      .map((cur, index, arr) =>
+        index > 0 && arr[index - 1].beginLesson === cur.beginLesson
+          ? `${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer_title || cur.lecturer}`
+          : `\n${cur.lessonNumberStart} | ${cur.beginLesson} - ${
+              cur.endLesson
+            }\n<b>${cur.discipline}</b> (${cur.kindOfWork.substring(
+              0,
+              3,
+            )}.)\n${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer_title || cur.lecturer}`,
+      )
+      .join('\n');
+  }
+
+  private getShortAuditorium(aud: string) {
+    const [corpus, cabinet] = aud.split('/');
+    return `${corpus
+      .split(' ')
+      .map((i) => i[0].toUpperCase())
+      .join('')} | ${cabinet}`;
+  }
+
+  private getFormattedDays(lessons: LessonDto[]) {
+    return lessons
+      .map((cur, index, arr) =>
+        index > 0 && arr[index - 1].beginLesson === cur.beginLesson
+          ? `<i>, ${this.getShortAuditorium(cur.auditorium)}</i>`
+          : `\n${cur.lessonNumberStart} | <b>${
+              cur.discipline
+            }</b> (${cur.kindOfWork.substring(0, 3)}.) - <i>${this.getShortAuditorium(
+              cur.auditorium,
+            )}</i>`,
+      )
+      .join('');
   }
 
   private getFormattedDate(date: Date, count = 0) {
