@@ -33,8 +33,10 @@ export const MESSAGES = {
     FETCHING: 'Получаю данные...',
     GREETING: 'Привет!',
     GROUP_NOT_SELECTED: 'Группа не выбрана. Пройти регистрацию: /start',
-    GROUP_SELECTED: (group_name: string) =>
-      `Выбрана группа <b>${group_name}</b>\n\nДля вызова меню напиши /menu`,
+    GROUP_SELECTED: (group_name: string, instruction?: boolean) =>
+      `Выбрана группа <b>${group_name}</b>${
+        instruction ? '\n<i>Сменить группу можно в настройках</i>' : ''
+      }\n\nДля вызова меню напиши /menu`,
     HELP_INFO:
       'Бот получает расписание напрямую с сайта университета.\n\n' +
       'Основное управление ботом происходит при помощи кнопок в сообщениях бота.\n' +

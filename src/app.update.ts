@@ -57,7 +57,7 @@ export class AppUpdate {
                 }
 
                 await ctx.reply(
-                  MESSAGES['ru'].GROUP_SELECTED(groups[0].label),
+                  MESSAGES['ru'].GROUP_SELECTED(groups[0].label, true),
                   {
                     parse_mode: 'HTML',
                   },
