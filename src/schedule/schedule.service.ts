@@ -112,23 +112,25 @@ export class ScheduleService {
     return lessons
       .map((cur, index, arr) =>
         index > 0 && arr[index - 1].beginLesson === cur.beginLesson
-          ? `${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer_title || cur.lecturer}`
+          ? `${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer}`
           : `\n${cur.lessonNumberStart} | ${cur.beginLesson} - ${
               cur.endLesson
             }\n<b>${cur.discipline}</b> (${cur.kindOfWork.substring(
               0,
               3,
-            )}.)\n${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer_title || cur.lecturer}`,
+            )}.)\n${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer}`,
       )
       .join('\n');
   }
 
   private getShortAuditorium(aud: string) {
     const [corpus, cabinet] = aud.split('/');
-    return `${corpus
-      .split(' ')
-      .map((i) => i[0].toUpperCase())
-      .join('')} | ${cabinet}`;
+    return corpus && cabinet
+      ? `${corpus
+          .split(' ')
+          .map((i) => i[0].toUpperCase())
+          .join('')} | ${cabinet}`
+      : aud;
   }
 
   private getFormattedDays(lessons: LessonDto[]) {

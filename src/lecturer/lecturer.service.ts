@@ -60,10 +60,12 @@ export class LecturerService {
 
   private getShortAuditorium(aud: string) {
     const [corpus, cabinet] = aud.split('/');
-    return `${corpus
-      .split(' ')
-      .map((i) => i[0].toUpperCase())
-      .join('')} | ${cabinet}`;
+    return corpus && cabinet
+      ? `${corpus
+          .split(' ')
+          .map((i) => i[0].toUpperCase())
+          .join('')} | ${cabinet}`
+      : aud;
   }
 
   private getFormattedLessons(lessons: LessonDto[]) {
