@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
-import * as telegramifyMarkdown from 'telegramify-markdown';
+import telegramifyMarkdown from 'telegramify-markdown';
 
 @Injectable()
 export class NotificationsService {
@@ -71,7 +71,7 @@ export class NotificationsService {
 
     const rejected: Rejected[] = [];
 
-    const preparedText = telegramifyMarkdown(text);
+    const preparedText = telegramifyMarkdown(text, 'escape');
 
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);
@@ -107,6 +107,20 @@ export class NotificationsService {
     this.logger.log(
       `Time has passed for ${list.length}: ${Date.now() - startTime}ms`,
     );
+
+    /*
+    TODO: inactivity users who banned bot
+    const _bannedByUser = rejected.filter(
+      (r) => r.reason.response.error_code === 000,
+    );
+
+    for (const rej of _bannedByUser) {
+      this.usersService.editInfo(rej.reason.on.payload.chat_id, {
+        is_inactive: true,
+        inactive_reason: '',
+      });
+    }
+    */
 
     this.progress = { current: 0, total: 0, rejected: 0 };
     this.isRunning = false;
