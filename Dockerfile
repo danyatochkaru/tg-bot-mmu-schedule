@@ -2,7 +2,7 @@ FROM node:alpine
 WORKDIR /app
 RUN npm i -g pnpm
 COPY ./*.json ./*.yaml ./
-RUN pnpm i -P
+RUN pnpm i
 COPY ./ ./
 RUN pnpm format
 RUN pnpm lint
