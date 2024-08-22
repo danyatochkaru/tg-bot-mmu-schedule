@@ -15,6 +15,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { FloorMapsModule } from './floor-maps/floor-maps.module';
+import { InfoModule } from './info/info.module';
 import * as https from 'node:https';
 
 const sessions = new LocalSession();
@@ -66,6 +67,7 @@ const sessions = new LocalSession();
     AuthModule,
     FileModule,
     FloorMapsModule,
+    InfoModule,
   ],
   providers: [AppUpdate],
 })

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -111,5 +111,11 @@ export class UsersService {
       inactive,
       total: usersFromDB.length,
     };
+  }
+
+  getCount(where?: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[]) {
+    return this.userRepository.count({
+      where
+    });
   }
 }
