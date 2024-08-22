@@ -59,6 +59,9 @@ importers:
       pg:
         specifier: ^8.12.0
         version: 8.12.0
+      punycode:
+        specifier: ^2.3.1
+        version: 2.3.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
