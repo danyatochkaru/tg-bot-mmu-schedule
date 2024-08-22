@@ -6,6 +6,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+enum RegisterSource {
+  DIRECTLY = 'directly',
+  GROUP_LINK = 'group_link',
+}
+
 @Entity()
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -41,7 +46,11 @@ export class UserEntity {
   @Column({ nullable: true })
   inactive_reason?: string;
 
-  @Column('enum', { default: 'directly' })
+  @Column({
+    type: 'enum',
+    enum: RegisterSource,
+    default: RegisterSource.DIRECTLY,
+  })
   register_source: 'directly' | 'group_link';
 
   @UpdateDateColumn()
