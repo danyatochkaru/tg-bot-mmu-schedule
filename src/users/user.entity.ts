@@ -41,6 +41,9 @@ export class UserEntity {
   @Column({ nullable: true })
   inactive_reason?: string;
 
+  @Column('enum', { default: 'directly' })
+  register_source: 'directly' | 'group_link';
+
   @UpdateDateColumn()
   updated_at: Date;
 

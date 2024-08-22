@@ -13,6 +13,7 @@ import { editMessage } from '../utils/editMessage';
 import { UsersService } from '../users/users.service';
 import { searchingGroupList } from './greeter.buttons';
 import { ApiService } from '../api/api.service';
+import { UserEntity } from '../users/user.entity';
 
 @Wizard(SELECT_GROUP_WIZARD)
 export class GreeterWizard {
@@ -84,13 +85,14 @@ export class GreeterWizard {
     );
 
     const user_from_db = await this.usersService.getInfo(user.id);
-    const payload = {
+    const payload: Omit<UserEntity, 'id' | 'updated_at' | 'created_at'> = {
       uid: String(user.id),
       group_id: parseInt(group_id),
       group_name: selected_group.label,
       first_name: user.first_name,
       last_name: user.last_name,
       username: user.username,
+      register_source: user_from_db.register_source || 'directly',
     };
 
     if (user_from_db) {

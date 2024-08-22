@@ -8,6 +8,7 @@ import {
 import { UsersService } from './users/users.service';
 import { ApiService } from './api/api.service';
 import Transliterator from './utils/transliterator';
+import { UserEntity } from './users/user.entity';
 
 @Update()
 export class AppUpdate {
@@ -41,13 +42,18 @@ export class AppUpdate {
               if (Array.isArray(groups) && groups.length === 1) {
                 const user = ctx.from;
                 const user_from_db = await this.usersService.getInfo(user.id);
-                const payload = {
+                const payload: Omit<
+                  UserEntity,
+                  'id' | 'updated_at' | 'created_at'
+                > = {
                   uid: String(user.id),
                   group_id: groups[0].id,
                   group_name: groups[0].label,
                   first_name: user.first_name,
                   last_name: user.last_name,
                   username: user.username,
+                  register_source:
+                    user_from_db?.register_source || 'group_link',
                 };
 
                 if (user_from_db) {
