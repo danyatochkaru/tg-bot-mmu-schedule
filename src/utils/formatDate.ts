@@ -1,5 +1,5 @@
 import { format, isValid } from 'date-fns';
-import ruLocale from 'date-fns/locale/ru';
+import { ru as ruLocale } from 'date-fns/locale/ru';
 
 export function formatDate(date: Date | string | number) {
   return (
