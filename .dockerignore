@@ -1,5 +1,7 @@
 pgdata
 
+sessions.json
+
 # Logs
 logs
 *.log

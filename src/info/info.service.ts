@@ -11,9 +11,16 @@ export class InfoService {
 
   async getUsersCount(date?: Date): Promise<InfoUsersObject> {
     return {
-      total_count: await this.usersService.getCount(Object.assign({}, date ? {
-        created_at: Between(startOfDay(date), endOfDay(date))
-      } : undefined))
-    }
+      total_count: await this.usersService.getCount(
+        Object.assign(
+          {},
+          date
+            ? {
+                created_at: Between(startOfDay(date), endOfDay(date)),
+              }
+            : undefined,
+        ),
+      ),
+    };
   }
 }

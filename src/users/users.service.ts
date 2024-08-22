@@ -113,9 +113,11 @@ export class UsersService {
     };
   }
 
-  getCount(where?: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[]) {
+  getCount(
+    where?: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
+  ) {
     return this.userRepository.count({
-      where
+      where,
     });
   }
 }

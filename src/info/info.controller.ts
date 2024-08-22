@@ -7,6 +7,6 @@ export class InfoController {
 
   @Get('users/count')
   async getUsersCount(@Query('date') date?: Date) {
-    return this.infoService.getUsersCount(date ? new Date(date) : undefined)
+    return this.infoService.getUsersCount(date ? new Date(date) : undefined);
   }
 }

@@ -135,7 +135,7 @@ export class NotificationsService {
         await this.usersService.getCountByGroups(groupList, users)
       ).groups,
     });
-    this.lastResults.length > 10 && this.lastResults.shift();
+    if (this.lastResults.length > 10) this.lastResults.shift();
     return this.lastResults.slice(-1);
   }
 
@@ -168,8 +168,8 @@ export class NotificationsService {
         results.forEach((r) => r.status === 'rejected' && rejected.push(r)),
       );
       const timeLeft = Date.now() - startTime;
-      i + requestsPerCycle < list.length &&
-        (await this.sleep(timeLeft > 1000 ? 0 : 1000));
+      if (i + requestsPerCycle < list.length)
+        await this.sleep(timeLeft > 1000 ? 0 : 1000);
 
       this.progress.current = i;
       this.progress.rejected = rejected.length;
