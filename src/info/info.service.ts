@@ -22,7 +22,7 @@ export class InfoService {
     };
 
     if (date) {
-      const dateFns: Record<'day' | 'week' | 'month', [Function, Function]> = {
+      const dateFns: Record<'day' | 'week' | 'month', [any, any]> = {
         day: [startOfDay, endOfDay],
         week: [startOfWeek, endOfWeek],
         month: [startOfMonth, endOfMonth],
