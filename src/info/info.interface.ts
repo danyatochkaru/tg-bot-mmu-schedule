@@ -3,9 +3,13 @@ export class InfoUsersObject {
   dates?: [Date, Date];
   total_count: number;
   details?: Array<{
-    group_id?: number;
+    groups?: Array<{
+      group_id?: number;
+      group_name?: string;
+      count?: number;
+    }>;
     count: number;
-    date?: Date;
-    scale?: 'day' | 'week' | 'month';
+    date: Date;
+    scale: 'day' | 'week' | 'month';
   }>;
 }
