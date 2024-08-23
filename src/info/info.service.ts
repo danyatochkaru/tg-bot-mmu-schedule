@@ -21,8 +21,10 @@ export class InfoService {
 
     console.log(
       date,
-      startOfDay(dir === 'prev' ? addDays(date, -days) : date),
-      endOfDay(dir === 'next' ? addDays(date, days) : date),
+      addDays(date, -days),
+      addDays(date, days),
+      date && startOfDay(dir === 'prev' ? addDays(date, -days) : date),
+      date && endOfDay(dir === 'next' ? addDays(date, days) : date),
     );
 
     if (date) {
