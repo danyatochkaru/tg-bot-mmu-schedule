@@ -21,17 +21,18 @@ export class InfoService {
 
     console.log(
       date,
-      addDays(date, -days),
-      addDays(date, days),
-      date && startOfDay(dir === 'prev' ? addDays(date, -days) : date),
-      date && endOfDay(dir === 'next' ? addDays(date, days) : date),
+      addDays(new Date(date), -days),
+      addDays(new Date(date), days),
+      date &&
+        startOfDay(dir === 'prev' ? addDays(new Date(date), -days) : date),
+      date && endOfDay(dir === 'next' ? addDays(new Date(date), days) : date),
     );
 
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
-          startOfDay(dir === 'prev' ? addDays(date, -days) : date),
-          endOfDay(dir === 'next' ? addDays(date, days) : date),
+          startOfDay(dir === 'prev' ? addDays(new Date(date), -days) : date),
+          endOfDay(dir === 'next' ? addDays(new Date(date), days) : date),
         ],
       );
 
