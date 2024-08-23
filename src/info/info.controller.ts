@@ -11,23 +11,21 @@ export class InfoController {
     @Query('days') days?: number,
     @Query('dir') dir?: 'next' | 'prev',
   ) {
+    const payload = {
+      date,
+      days,
+      dir,
+    };
+
+    Object.keys(payload).forEach(
+      (key) => payload[key] === undefined && delete payload[key],
+    );
+
     return {
-      payload: Object.assign(
-        date && {
-          date,
-        },
-        days && {
-          days,
-        },
-        dir && {
-          dir,
-        },
-      ),
-      data: await this.infoService.getUsersCount(
-        date ? new Date(date) : undefined,
-        days,
-        dir,
-      ),
+      payload,
+      data: await this.infoService
+        .getUsersCount(date ? new Date(date) : undefined, days, dir)
+        .catch((err) => err),
     };
   }
 }

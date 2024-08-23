@@ -19,6 +19,8 @@ export class InfoService {
       details: [],
     };
 
+    console.log(date);
+
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
