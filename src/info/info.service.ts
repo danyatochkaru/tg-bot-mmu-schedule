@@ -33,29 +33,11 @@ export class InfoService {
       );
 
       result.total_count = count;
-      result.details = users
-        .map((user) => startOfDay(user.created_at))
-        .filter((x, i, a) => a.indexOf(x) === i)
-        .map((date) => ({
-          groups: users
-            .filter(
-              (u) => startOfDay(u.created_at).getTime() === date.getTime(),
-            )
-            .map((u, _, a) =>
-              Object.assign(u, {
-                count: a.reduce(
-                  (acc, cur) => (cur.group_id === u.group_id ? acc + 1 : acc),
-                  1,
-                ),
-              }),
-            ),
-          date,
-          scale,
-        }));
-      /*result.details = users.reduce(
+      result.details = users.reduce(
         (acc, user) => {
           const findEqDatesFn = (i) =>
-            startOfDay(i.date) === startOfDay(user.created_at);
+            startOfDay(i.date).getTime() ===
+            startOfDay(user.created_at).getTime();
 
           if (acc.some(findEqDatesFn)) {
             const index = acc.findIndex(findEqDatesFn);
@@ -70,8 +52,7 @@ export class InfoService {
             acc.push({
               groups: [
                 {
-                  group_id: user.group_id,
-                  group_name: user.group_name,
+                  ...user,
                   count: 1,
                 },
               ],
@@ -82,7 +63,7 @@ export class InfoService {
           return acc;
         },
         [] as InfoUsersObject['details'],
-      );*/
+      );
     } else {
       result.total_count = await this.usersService.getCount();
     }

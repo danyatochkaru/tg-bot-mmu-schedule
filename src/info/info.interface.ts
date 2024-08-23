@@ -8,13 +8,13 @@ export class InfoUsersObject {
     groups: Array<
       Pick<
         UserEntity,
-        | 'group_id'
         | 'group_name'
         | 'is_inactive'
         | 'inactive_reason'
         | 'register_source'
         | 'created_at'
       > & {
+        group_id: number;
         count: number;
       }
     >;
