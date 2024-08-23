@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { InfoUsersObject } from './info.interface';
-import { startOfDay } from 'date-fns/startOfDay';
-import { endOfDay } from 'date-fns/endOfDay';
-import { addDays } from 'date-fns/addDays';
+import { addDays, endOfDay, startOfDay } from 'date-fns';
 
 @Injectable()
 export class InfoService {
@@ -19,20 +17,11 @@ export class InfoService {
       details: [],
     };
 
-    console.log(
-      date,
-      addDays(new Date(date), -days),
-      addDays(new Date(date), days),
-      date &&
-        startOfDay(dir === 'prev' ? addDays(new Date(date), -days) : date),
-      date && endOfDay(dir === 'next' ? addDays(new Date(date), days) : date),
-    );
-
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
-          startOfDay(dir === 'prev' ? addDays(new Date(date), -days) : date),
-          endOfDay(dir === 'next' ? addDays(new Date(date), days) : date),
+          startOfDay(dir === 'prev' ? addDays(date, -(days ?? 1)) : date),
+          endOfDay(dir === 'next' ? addDays(date, days ?? 1) : date),
         ],
       );
 
