@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { InfoUsersObject } from './info.interface';
-import { Between } from 'typeorm';
 import { startOfDay } from 'date-fns/startOfDay';
-import { endOfDay } from 'date-fns/endOfDay';
 
 @Injectable()
 export class InfoService {
@@ -15,16 +13,39 @@ export class InfoService {
       details: [],
     };
 
-    result.total_count = await this.usersService.getCount(
-      Object.assign(
-        {},
-        date
-          ? {
-              created_at: Between(startOfDay(date), endOfDay(date)),
-            }
-          : undefined,
-      ),
-    );
+    if (date) {
+      const [groups, count] =
+        await this.usersService.getGroupsWithCountNewUsers([date]);
+
+      result.total_count = count;
+      result.details = groups.reduce(
+        (acc, group) => {
+          if (
+            acc.some(
+              (i) =>
+                i.group_id === group.group_id && i.date === group.created_at,
+            )
+          ) {
+            const index = acc.findIndex(
+              (i) =>
+                i.group_id === group.group_id && i.date === group.created_at,
+            );
+            acc[index].count += 1;
+          } else {
+            acc.push({
+              group_id: group.group_id,
+              count: 1,
+              date: group.created_at,
+              scale: 'day',
+            });
+          }
+          return acc;
+        },
+        [] as InfoUsersObject['details'],
+      );
+    } else {
+      result.total_count = await this.usersService.getCount();
+    }
 
     if (date) result.date = startOfDay(date);
 

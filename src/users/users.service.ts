@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, In, Repository } from 'typeorm';
+import { startOfDay } from 'date-fns/startOfDay';
+import { endOfDay } from 'date-fns/endOfDay';
 
 @Injectable()
 export class UsersService {
@@ -116,8 +118,25 @@ export class UsersService {
   getCount(
     where?: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
   ) {
-    return this.userRepository.count({
-      where,
+    return this.userRepository.countBy(where);
+  }
+
+  getGroupsWithCountNewUsers(dates: Date[]) {
+    return this.userRepository.findAndCount({
+      where: {
+        created_at: Between(
+          startOfDay(dates[0]),
+          endOfDay(dates[dates.length - 1]),
+        ),
+      },
+      select: [
+        'group_id',
+        'group_name',
+        'is_inactive',
+        'inactive_reason',
+        'register_source',
+        'created_at',
+      ],
     });
   }
 }
