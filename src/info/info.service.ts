@@ -61,7 +61,7 @@ export class InfoService {
                 },
               ],
               count: 1,
-              date: group.created_at,
+              date: startOfDay(group.created_at),
               scale,
             });
           }
