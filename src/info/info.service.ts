@@ -38,7 +38,9 @@ export class InfoService {
         .filter((x, i, a) => a.indexOf(x) === i)
         .map((date) => ({
           groups: users
-            .filter((u) => startOfDay(u.created_at) === date)
+            .filter(
+              (u) => startOfDay(u.created_at).getTime() === date.getTime(),
+            )
             .map((u, _, a) =>
               Object.assign(u, {
                 count: a.reduce(
