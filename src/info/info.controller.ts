@@ -8,11 +8,26 @@ export class InfoController {
   @Get('users/count')
   async getUsersCount(
     @Query('date') date?: Date,
-    @Query('scale') scale?: 'day' | 'week' | 'month',
+    @Query('days') days?: number,
+    @Query('dir') dir?: 'next' | 'prev',
   ) {
-    return this.infoService.getUsersCount(
-      date ? new Date(date) : undefined,
-      scale,
-    );
+    return {
+      payload: Object.assign(
+        date && {
+          date,
+        },
+        days && {
+          days,
+        },
+        dir && {
+          dir,
+        },
+      ),
+      data: await this.infoService.getUsersCount(
+        date ? new Date(date) : undefined,
+        days,
+        dir,
+      ),
+    };
   }
 }

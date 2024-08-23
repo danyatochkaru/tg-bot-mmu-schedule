@@ -3,10 +3,7 @@ import { UsersService } from '../users/users.service';
 import { InfoUsersObject } from './info.interface';
 import { startOfDay } from 'date-fns/startOfDay';
 import { endOfDay } from 'date-fns/endOfDay';
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { endOfWeek } from 'date-fns/endOfWeek';
-import { endOfMonth } from 'date-fns/endOfMonth';
-import { startOfMonth } from 'date-fns/startOfMonth';
+import { addDays } from 'date-fns/addDays';
 
 @Injectable()
 export class InfoService {
@@ -14,7 +11,8 @@ export class InfoService {
 
   async getUsersCount(
     date?: Date,
-    scale: 'day' | 'week' | 'month' = 'day',
+    days: number = 1,
+    dir: 'next' | 'prev' = 'prev',
   ): Promise<InfoUsersObject> {
     const result: InfoUsersObject = {
       total_count: 0,
@@ -22,14 +20,11 @@ export class InfoService {
     };
 
     if (date) {
-      const dateFns: Record<'day' | 'week' | 'month', [any, any]> = {
-        day: [startOfDay, endOfDay],
-        week: [startOfWeek, endOfWeek],
-        month: [startOfMonth, endOfMonth],
-      };
-
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
-        [dateFns[scale][0](date), dateFns[scale][1](date)],
+        [
+          startOfDay(dir === 'prev' ? addDays(date, -days) : date),
+          endOfDay(dir === 'next' ? addDays(date, days) : date),
+        ],
       );
 
       result.total_count = count;
@@ -70,7 +65,6 @@ export class InfoService {
                 },
               ],
               date: startOfDay(user.created_at),
-              scale,
             });
           }
           return acc;
@@ -80,8 +74,6 @@ export class InfoService {
     } else {
       result.total_count = await this.usersService.getCount();
     }
-
-    if (date) result.date = startOfDay(date);
 
     return result;
   }

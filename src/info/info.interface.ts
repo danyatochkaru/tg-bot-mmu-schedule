@@ -1,6 +1,4 @@
 export class InfoUsersObject {
-  date?: Date;
-  dates?: [Date, Date];
   total_count: number;
   details?: Array<{
     groups: Array<{
@@ -10,6 +8,5 @@ export class InfoUsersObject {
       count: number;
     }>;
     date: Date;
-    scale: 'day' | 'week' | 'month';
   }>;
 }
