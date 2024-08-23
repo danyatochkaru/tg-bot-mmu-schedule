@@ -9,7 +9,7 @@ export class InfoService {
 
   async getUsersCount(
     date?: Date,
-    days: number = 1,
+    days?: number,
     dir: 'next' | 'prev' = 'prev',
   ): Promise<InfoUsersObject> {
     const result: InfoUsersObject = {
@@ -20,8 +20,8 @@ export class InfoService {
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
-          startOfDay(dir === 'prev' ? addDays(date, -(days ?? 1)) : date),
-          endOfDay(dir === 'next' ? addDays(date, days ?? 1) : date),
+          startOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
+          endOfDay(dir === 'next' ? addDays(date, days || 1) : date),
         ],
       );
 

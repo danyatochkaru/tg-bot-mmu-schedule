@@ -24,7 +24,7 @@ export class InfoController {
     return {
       payload,
       data: await this.infoService
-        .getUsersCount(date ? new Date(date) : undefined, days, dir)
+        .getUsersCount(date ? new Date(date) : undefined, days || 1, dir)
         .catch((err) => err),
     };
   }
