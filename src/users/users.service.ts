@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Between, FindOptionsWhere, In, Repository } from 'typeorm';
-import { toZonedTime } from 'date-fns-tz';
 
 @Injectable()
 export class UsersService {
@@ -121,7 +120,7 @@ export class UsersService {
   }
 
   getGroupsWithCountNewUsers(dates: Date[]) {
-    const [from, to] = dates.map((d) => toZonedTime(d, 'Europe/Moscow'));
+    const [from, to] = dates;
 
     return this.userRepository.findAndCount({
       where: {
