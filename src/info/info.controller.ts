@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { InfoService } from './info.service';
+import { addDays } from 'date-fns';
 
 @Controller('info')
 export class InfoController {
@@ -24,7 +25,11 @@ export class InfoController {
     return {
       payload,
       data: await this.infoService
-        .getUsersCount(date ? new Date(date) : undefined, days || 1, dir)
+        .getUsersCount(
+          date ? addDays(new Date(date), 1 /*FIXME:timezone*/) : undefined,
+          days || 1,
+          dir,
+        )
         .catch((err) => err),
     };
   }
