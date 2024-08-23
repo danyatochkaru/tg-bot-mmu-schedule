@@ -51,6 +51,13 @@ export class InfoService {
               acc[index].groups[
                 acc[index].groups.findIndex(findEqGroupsFn)
               ].inactive_count += user.is_inactive ? 1 : 0;
+            } else {
+              acc[index].groups.push({
+                group_id: user.group_id,
+                group_name: user.group_name,
+                inactive_count: user.is_inactive ? 1 : 0,
+                count: 1,
+              });
             }
           } else {
             acc.push({
