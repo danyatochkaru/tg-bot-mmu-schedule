@@ -2,8 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Between, FindOptionsWhere, In, Repository } from 'typeorm';
-import { startOfDay } from 'date-fns/startOfDay';
-import { endOfDay } from 'date-fns/endOfDay';
 
 @Injectable()
 export class UsersService {
@@ -124,10 +122,7 @@ export class UsersService {
   getGroupsWithCountNewUsers(dates: Date[]) {
     return this.userRepository.findAndCount({
       where: {
-        created_at: Between(
-          startOfDay(dates[0]),
-          endOfDay(dates[dates.length - 1]),
-        ),
+        created_at: Between(dates[0], dates[dates.length - 1]),
       },
       select: [
         'group_id',
