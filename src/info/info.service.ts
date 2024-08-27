@@ -19,14 +19,14 @@ export class InfoService {
 
     console.log(
       'dates',
-      startOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
+      endOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
       endOfDay(dir === 'next' ? addDays(date, days || 1) : date),
     );
 
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
-          startOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
+          endOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
           endOfDay(dir === 'next' ? addDays(date, days || 1) : date),
         ],
       );
