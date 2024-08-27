@@ -92,10 +92,11 @@ export class GreeterWizard {
       first_name: user.first_name,
       last_name: user.last_name,
       username: user.username,
-      register_source: user_from_db?.register_source || 'directly',
+      register_source: 'directly',
     };
 
     if (user_from_db) {
+      payload.register_source = user_from_db?.register_source;
       await this.usersService.editInfo(user.id, payload);
     } else {
       await this.usersService.register(payload);

@@ -52,11 +52,11 @@ export class AppUpdate {
                   first_name: user.first_name,
                   last_name: user.last_name,
                   username: user.username,
-                  register_source:
-                    user_from_db?.register_source || 'group_link',
+                  register_source: 'group_link',
                 };
 
                 if (user_from_db) {
+                  payload.register_source = user_from_db?.register_source;
                   await this.usersService.editInfo(user.id, payload);
                 } else {
                   await this.usersService.register(payload);
