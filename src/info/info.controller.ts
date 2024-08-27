@@ -1,6 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { InfoService } from './info.service';
+import { AuthGuard } from '../auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('info')
 export class InfoController {
   constructor(private readonly infoService: InfoService) {}
@@ -27,5 +29,10 @@ export class InfoController {
         .getUsersCount(date ? new Date(date) : undefined, days || 1, dir)
         .catch((err) => err),
     };
+  }
+
+  @Get('/users/source')
+  async getUsersSource() {
+    return await this.infoService.getUsersSource();
   }
 }
