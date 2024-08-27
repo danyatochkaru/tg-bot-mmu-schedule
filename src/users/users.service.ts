@@ -138,13 +138,11 @@ export class UsersService {
   }
 
   getSourceStatistics() {
-    return this.userRepository.query(
-      `select user_entity.register_source, count(*) as count from user_entity group by user_entity.register_source`,
-    );
-    /*.createQueryBuilder('user_entity')
+    return this.userRepository
+      .createQueryBuilder('user_entity')
       .select('user_entity.register_source as source')
-      .addSelect('COUNT(*) as count')
+      .addSelect('count(*) as count')
       .groupBy('user_entity.register_source')
-      .getRawMany();*/
+      .getRawMany();
   }
 }
