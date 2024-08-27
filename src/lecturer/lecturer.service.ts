@@ -106,6 +106,8 @@ export class LecturerService {
   }
 
   private getLecturers(data: LessonDto[]) {
-    return data.map((i) => i.lecturer).filter((x, i, a) => a.indexOf(x) === i);
+    return data
+      .map((i) => i.lecturer_title || i.lecturer)
+      .filter((x, i, a) => a.indexOf(x) === i);
   }
 }
