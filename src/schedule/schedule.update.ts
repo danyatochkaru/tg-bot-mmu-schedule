@@ -50,7 +50,9 @@ export class ScheduleUpdate {
         ctx,
         data instanceof Error
           ? MESSAGES['ru'].NO_ANSWER_RETRY
-          : this.scheduleService.prepareTextMessageForDay(data, date),
+          : this.scheduleService.prepareTextMessageForDay(data, date, {
+              hide_buildings: user.hide_buildings,
+            }),
         {
           reply_markup: dayController(date, data instanceof Error).reply_markup,
           parse_mode: 'HTML',
@@ -85,8 +87,12 @@ export class ScheduleUpdate {
         data instanceof Error
           ? MESSAGES['ru'].NO_ANSWER_RETRY
           : user.detail_week
-            ? this.scheduleService.prepareTextMessageForDay(data, date)
-            : this.scheduleService.prepareTextMessageForWeek(data, date),
+            ? this.scheduleService.prepareTextMessageForDay(data, date, {
+                hide_buildings: user.hide_buildings,
+              })
+            : this.scheduleService.prepareTextMessageForWeek(data, date, {
+                hide_buildings: user.hide_buildings,
+              }),
         {
           reply_markup: weekController(date, {
             hasError: data instanceof Error,
@@ -165,10 +171,12 @@ export class ScheduleUpdate {
         ? this.scheduleService.prepareTextMessageForDay(
             (data as LessonDto[][]).flat(),
             dates.length && dates[0].start?.date(),
+            { hide_buildings: user.hide_buildings },
           )
         : this.scheduleService.prepareTextMessageForWeek(
             (data as LessonDto[][]).flat(),
             dates.length && dates[0].start?.date(),
+            { hide_buildings: user.hide_buildings },
           ),
       {
         reply_markup: emptyController().reply_markup,

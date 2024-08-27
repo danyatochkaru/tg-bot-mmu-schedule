@@ -28,7 +28,11 @@ export class LecturerService {
     })) as LessonDto[];
   }
 
-  prepareTextMessageForLecturer(data: LessonDto[], date = new Date()) {
+  prepareTextMessageForLecturer(
+    data: LessonDto[],
+    date = new Date(),
+    options = { hide_buildings: false },
+  ) {
     if (!data || !Array.isArray(data)) {
       this.logger.error(`[prepareTextMessageForLecturer] data is not array`);
       this.logger.error(JSON.stringify(data, undefined, 2));
@@ -50,7 +54,7 @@ export class LecturerService {
         .map((i) =>
           [
             this.getFormattedDate(new Date(i.day)),
-            this.getFormattedLessons(i.list),
+            this.getFormattedLessons(i.list, options.hide_buildings),
           ].join('\n\n'),
         )
         .join('\n\n'),
@@ -58,23 +62,20 @@ export class LecturerService {
     ].join('\n\n');
   }
 
-  private getShortAuditorium(aud: string) {
-    const [corpus, cabinet] = aud.split('/');
-    return corpus && cabinet
-      ? `${corpus
-          .split(' ')
-          .map((i) => i[0].toUpperCase())
-          .join('')} | ${cabinet}`
-      : aud;
+  private getShortBuilding(b: string) {
+    return `${b
+      .split(' ')
+      .map((i) => i[0].toUpperCase())
+      .join('')} | `;
   }
 
-  private getFormattedLessons(lessons: LessonDto[]) {
+  private getFormattedLessons(lessons: LessonDto[], hide_buildings?: boolean) {
     return lessons
       .map(
         (cur) =>
           `${cur.lessonNumberStart} | ${cur.beginLesson} - ${
             cur.endLesson
-          } | <i>${this.getShortAuditorium(cur.auditorium)}</i>\n<b>${
+          } | <i>${hide_buildings ? '' : this.getShortBuilding(cur.building)}${cur.auditorium}</i>\n<b>${
             cur.discipline
           }</b> (${cur.kindOfWork.substring(0, 3)}.)`,
       )

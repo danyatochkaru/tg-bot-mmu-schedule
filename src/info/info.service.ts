@@ -17,12 +17,6 @@ export class InfoService {
       details: [],
     };
 
-    console.log(
-      'dates',
-      endOfDay(dir === 'prev' ? addDays(date, -(days || 1)) : date),
-      endOfDay(dir === 'next' ? addDays(date, days || 1) : date),
-    );
-
     if (date) {
       const [users, count] = await this.usersService.getGroupsWithCountNewUsers(
         [
@@ -34,7 +28,7 @@ export class InfoService {
       result.total_count = count;
       result.details = users.reduce(
         (acc, user) => {
-          const findEqDatesFn = (i) =>
+          const findEqDatesFn = (i: { date: any }) =>
             startOfDay(i.date).getTime() ===
             startOfDay(user.created_at).getTime();
 

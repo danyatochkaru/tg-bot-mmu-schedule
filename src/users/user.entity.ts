@@ -37,6 +37,9 @@ export class UserEntity {
   @Column({ default: false })
   detail_week?: boolean;
 
+  @Column({ default: false })
+  hide_buildings?: boolean;
+
   @Column({ default: true })
   allow_mailing?: boolean;
 

@@ -63,6 +63,24 @@ export class SettingsUpdate {
       },
     );
   }
+  @Action(/change-hide-build/i)
+  async changeHideBuildings(@Ctx() ctx: Context) {
+    const flag =
+      (ctx.callbackQuery as { data: string }).data.split('=')[1] === 'true';
+    const updated_user = await this.usersService.editInfo(ctx.from.id, {
+      hide_buildings: flag,
+    });
+    await editMessage(
+      ctx,
+      MESSAGES['ru'].HIDE_BUILDINGS_SWITCHED(updated_user.hide_buildings),
+      {
+        reply_markup: settingsController({
+          user: updated_user,
+        }).reply_markup,
+        parse_mode: 'HTML',
+      },
+    );
+  }
 
   @Action(/toggle_allow_mailing/i)
   async toggleAllowMailing(@Ctx() ctx: Context) {

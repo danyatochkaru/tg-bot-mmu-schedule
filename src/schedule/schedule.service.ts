@@ -44,7 +44,11 @@ export class ScheduleService {
     );
   }
 
-  prepareTextMessageForDay(data: LessonDto[], date = new Date()) {
+  prepareTextMessageForDay(
+    data: LessonDto[],
+    date = new Date(),
+    options = { hide_buildings: false },
+  ) {
     if (!data || !Array.isArray(data)) {
       this.logger.error(`[prepareTextMessageForDay] data is not array`);
       this.logger.error(JSON.stringify(data, undefined, 2));
@@ -66,7 +70,7 @@ export class ScheduleService {
         .map((i) =>
           [
             this.getFormattedDate(new Date(i.day)),
-            this.getFormattedLessons(i.list),
+            this.getFormattedLessons(i.list, options.hide_buildings),
           ].join('\n'),
         )
         .join('\n\n'),
@@ -74,7 +78,11 @@ export class ScheduleService {
     ].join('\n\n');
   }
 
-  prepareTextMessageForWeek(data: LessonDto[], date = new Date()) {
+  prepareTextMessageForWeek(
+    data: LessonDto[],
+    date = new Date(),
+    options = { hide_buildings: false },
+  ) {
     if (!data || !Array.isArray(data)) {
       this.logger.error(`[prepareTextMessageForWeek] data is not array`);
       this.logger.error(JSON.stringify(data, undefined, 2));
@@ -100,7 +108,7 @@ export class ScheduleService {
               //   .map((i) => `${i.lessonNumberStart}${i.discipline}`)
               //   .filter((x, i, a) => a.indexOf(x) === i).length,
             ),
-            this.getFormattedDays(i.list),
+            this.getFormattedDays(i.list, options.hide_buildings),
           ].join('\n'),
         )
         .join('\n\n'),
@@ -108,41 +116,36 @@ export class ScheduleService {
     ].join('\n\n');
   }
 
-  private getFormattedLessons(lessons: LessonDto[]) {
+  private getFormattedLessons(lessons: LessonDto[], hide_buildings?: boolean) {
     return lessons
       .map((cur, index, arr) =>
         index > 0 && arr[index - 1].beginLesson === cur.beginLesson
-          ? `${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer}`
+          ? `${hide_buildings ? '' : this.getShortBuilding(cur.building)}${cur.auditorium} - ${cur.lecturer}`
           : `\n${cur.lessonNumberStart} | ${cur.beginLesson} - ${
               cur.endLesson
             }\n<b>${cur.discipline}</b> (${cur.kindOfWork.substring(
               0,
               3,
-            )}.)\n${this.getShortAuditorium(cur.auditorium)} - ${cur.lecturer}`,
+            )}.)\n${hide_buildings ? '' : this.getShortBuilding(cur.building)}${cur.auditorium} - ${cur.lecturer}`,
       )
       .join('\n');
   }
 
-  private getShortAuditorium(aud: string) {
-    const [corpus, cabinet] = aud.split('/');
-    return corpus && cabinet
-      ? `${corpus
-          .split(' ')
-          .map((i) => i[0].toUpperCase())
-          .join('')} | ${cabinet}`
-      : aud;
+  private getShortBuilding(b: string) {
+    return `${b
+      .split(' ')
+      .map((i) => i[0].toUpperCase())
+      .join('')} | `;
   }
 
-  private getFormattedDays(lessons: LessonDto[]) {
+  private getFormattedDays(lessons: LessonDto[], hide_buildings?: boolean) {
     return lessons
       .map((cur, index, arr) =>
         index > 0 && arr[index - 1].beginLesson === cur.beginLesson
-          ? `<i>, ${this.getShortAuditorium(cur.auditorium)}</i>`
+          ? `<i>, ${hide_buildings ? '' : this.getShortBuilding(cur.building)}${cur.auditorium}</i>`
           : `\n${cur.lessonNumberStart} | <b>${
               cur.discipline
-            }</b> (${cur.kindOfWork.substring(0, 3)}.) - <i>${this.getShortAuditorium(
-              cur.auditorium,
-            )}</i>`,
+            }</b> (${cur.kindOfWork.substring(0, 3)}.) - <i>${hide_buildings ? '' : this.getShortBuilding(cur.building)}${cur.auditorium}</i>`,
       )
       .join('');
   }

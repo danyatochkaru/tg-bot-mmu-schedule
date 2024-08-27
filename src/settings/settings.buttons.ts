@@ -15,6 +15,12 @@ export function settingsController({ user }: { user: Partial<UserEntity> }) {
         `change-detail-week=${!user.detail_week}`,
       ),
     ],
+    [
+      Markup.button.callback(
+        `Показывать корпус | ${user.hide_buildings ? 'Выкл' : 'Вкл'}`,
+        `change-hide-build=${!user.hide_buildings}`,
+      ),
+    ],
     /* Временно неактуально
     [
       Markup.button.callback(
