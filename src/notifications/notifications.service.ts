@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
-import telegramifyMarkdown from 'telegramify-markdown';
+import * as telegramifyMarkdown from 'telegramify-markdown';
 
 @Injectable()
 export class NotificationsService {
@@ -71,7 +71,7 @@ export class NotificationsService {
 
     const rejected: Rejected[] = [];
 
-    const preparedText = telegramifyMarkdown(text, 'escape');
+    const preparedText = telegramifyMarkdown(text);
 
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);

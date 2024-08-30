@@ -77,8 +77,6 @@ export class InfoService {
   }
 
   async getUsersSource() {
-    const a = await this.usersService.getSourceStatistics();
-    console.log(a);
-    return a;
+    return await this.usersService.getSourceStatistics();
   }
 }
