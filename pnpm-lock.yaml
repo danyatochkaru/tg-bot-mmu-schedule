@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@nestjs/axios':
         specifier: ^3.0.3
-        version: 3.0.3(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.4(debug@4.3.6))(rxjs@7.8.1)
+        version: 3.0.3(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7(debug@4.3.6))(rxjs@7.8.1)
       '@nestjs/common':
         specifier: ^10.4.1
         version: 10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -36,8 +36,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       axios:
-        specifier: ^1.7.4
-        version: 1.7.4(debug@4.3.6)
+        specifier: ^1.7.7
+        version: 1.7.7(debug@4.3.6)
       chrono-node:
         specifier: ^2.7.6
         version: 2.7.6
@@ -700,8 +700,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
+  axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
 
   bail@1.0.5:
     resolution: {integrity: sha512-xFbRxM1tahm08yHBP16MMjVUAvDaBMD38zsM9EMAUN61omwLmKlOpB/Zku5QkjZ8TZ4vn53pj+t518cH0S03RQ==}
@@ -2858,10 +2858,10 @@ snapshots:
 
   '@lukeed/csprng@1.1.0': {}
 
-  '@nestjs/axios@3.0.3(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.4(debug@4.3.6))(rxjs@7.8.1)':
+  '@nestjs/axios@3.0.3(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7(debug@4.3.6))(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      axios: 1.7.4(debug@4.3.6)
+      axios: 1.7.7(debug@4.3.6)
       rxjs: 7.8.1
 
   '@nestjs/cli@10.4.4':
@@ -3365,7 +3365,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.7.4(debug@4.3.6):
+  axios@1.7.7(debug@4.3.6):
     dependencies:
       follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
