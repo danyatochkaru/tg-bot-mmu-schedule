@@ -8,6 +8,7 @@ async function bootstrap() {
   const { timestamp, combine, printf, errors } = winston.format;
 
   const app = await NestFactory.create(AppModule, {
+    abortOnError: false,
     logger: WinstonModule.createLogger({
       transports: [
         new winston.transports.File({
