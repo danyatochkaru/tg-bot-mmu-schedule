@@ -56,6 +56,9 @@ export class UserEntity {
   })
   register_source: 'directly' | 'group_link';
 
+  @Column({ default: 'ru' })
+  language?: string;
+
   @UpdateDateColumn()
   updated_at: Date;
 

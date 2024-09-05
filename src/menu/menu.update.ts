@@ -6,6 +6,7 @@ import { MESSAGES, TRANSLIT_ALPHABET } from '../app.constants';
 import { Logger } from '@nestjs/common';
 import Transliterator from '../utils/transliterator';
 import { UsersService } from '../users/users.service';
+import { FaqService } from '../faq/faq.service';
 
 @Update()
 // @UseInterceptors(new LoggingInterceptor())
@@ -13,7 +14,10 @@ export class MenuUpdate {
   private logger = new Logger(MenuUpdate.name);
   private transliterator = new Transliterator(TRANSLIT_ALPHABET);
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly faqService: FaqService,
+  ) {}
 
   @Hears(/^меню$/i)
   @Command(/^menu$/i)
@@ -26,16 +30,18 @@ export class MenuUpdate {
       'data' in ctx.callbackQuery &&
       'text' in ctx.callbackQuery.message
     ) {
-      await editMessage(ctx, MESSAGES['ru'].MENU, {
+      await editMessage(ctx, MESSAGES[user.language].MENU, {
         reply_markup: theMenu({
           link: `t.me/${ctx.botInfo.username}?start${user ? `=group_${this.transliterator.decode(user.group_name)}` : ''}`,
+          faq: (await this.faqService.getFaq([user.language])).length > 0,
         }).reply_markup,
       });
     } else {
       await ctx
-        .reply(MESSAGES['ru'].MENU, {
+        .reply(MESSAGES[user.language].MENU, {
           reply_markup: theMenu({
             link: `t.me/${ctx.botInfo.username}?start${user ? `=group_${this.transliterator.decode(user.group_name)}` : ''}`,
+            faq: (await this.faqService.getFaq([user.language])).length > 0,
           }).reply_markup,
         })
         .catch((err) => this.logger.error(JSON.stringify(err, undefined, 2)));

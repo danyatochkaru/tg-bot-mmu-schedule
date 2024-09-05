@@ -19,7 +19,9 @@ export class UsersUpdate {
         ? `id: ${user.id}\n` +
             `uid: ${user.uid}\n` +
             `username: ${user.username}\n` +
-            `group: ${user.group_name}`
+            `group: ${user.group_name}\n` +
+            `language: ${user.language}\n` +
+            `created: ${user.created_at.toLocaleString()}`
         : MESSAGES['ru'].NOT_REGISTERED,
     );
   }

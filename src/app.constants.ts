@@ -3,13 +3,13 @@ export const SELECT_LECTURER_WIZARD = 'select-lecturer';
 
 export const MESSAGES = {
   ru: {
+    ACTIVITY_RESTORATION: 'С возвращением!\n\nДля вызова меню напиши /menu',
     ALLOW_MAILING_CHANGED: (flag: boolean) =>
       `Получение рассылок ${flag ? 'включено' : 'выключено'}\n\n${
         MESSAGES['ru'].SETTINGS
       }`,
     ALREADY_REGISTERED:
       'Ты уже зарегистрирован(а)!\n\nДля вызова меню напиши /menu',
-    ACTIVITY_RESTORATION: 'С возвращением!\n\nДля вызова меню напиши /menu',
     ATTACHED_MESSAGE_FOR_MAILING_NOT_FOUND:
       'Нет прикреплённого сообщения или текста для рассылки',
     CANCEL_SEARCH: 'Поиск отменён\n\nДля вызова меню напиши /menu',
@@ -27,14 +27,12 @@ export const MESSAGES = {
       `Подробная неделя ${flag ? 'включена' : 'выключена'}\n\n${
         MESSAGES['ru'].SETTINGS
       }`,
-    HIDE_BUILDINGS_SWITCHED: (flag: boolean) =>
-      `Теперь корпус рядом с кабинетом будет ${flag ? 'скрыт' : 'показан'}\n\n${
-        MESSAGES['ru'].SETTINGS
-      }`,
     ENTER_GROUP: 'Напиши свою группу (можно не полностью)',
     ENTER_LECTURER: 'Напиши ФИО преподавателя (можно не полностью)',
     ERROR_RETRY: 'Произошла ошибка. Ты можешь попробовать ещё раз',
+    FAQ_TEXT_NOT_FOUND: 'К сожалению, FAQ сейчас недоступен',
     FETCHING: 'Получаю данные...',
+    FLOOR_MENU: 'Выбери этаж',
     GREETING: 'Привет!',
     GROUP_NOT_SELECTED: 'Группа не выбрана. Пройти регистрацию: /start',
     GROUP_SELECTED: (group_name: string, instruction?: boolean) =>
@@ -51,14 +49,19 @@ export const MESSAGES = {
       'через месяц\n' +
       'в следующий четверг\n' +
       '06.09.2023\n',
+    HIDE_BUILDINGS_SWITCHED: (flag: boolean) =>
+      `Теперь корпус рядом с кабинетом будет ${flag ? 'скрыт' : 'показан'}\n\n${
+        MESSAGES['ru'].SETTINGS
+      }`,
     LECTURER_SELECTED: (lecturer_name: string) =>
       `Выбран преподаватель <b>${lecturer_name}</b>`,
+    LINK_WITH_GROUP: (bot_name: string, group: string) =>
+      `Отправь эту ссылку одногруппникам - <code>t.me/${bot_name}?start=group_${group}</code>`,
     MAILING_UNSUBSCRIBE_INFO: 'Отписаться от рассылкии можно в настройках бота',
     MANY_GROUPS_FOUND: 'Найдено слишком много групп. Напиши поточнее',
     MANY_LECTURERS_FOUND:
       'Найдено слишком много преподавателей. Напиши поточнее',
     MENU: 'Меню',
-    FLOOR_MENU: 'Выбери этаж',
     NOT_REGISTERED: 'Вы не зарегистрированы',
     NOT_REGISTERED_FOR_SETTINGS:
       'Чтобы что-то менять, нужно сначала это что-то создать. Пройти регистрацию: /start',
@@ -82,8 +85,6 @@ export const MESSAGES = {
       'Я не могу распознать дни, которые ты хочешь увидеть.\n\n' +
       'Я понимаю такие сообщения, как `расписание на завтра`, `расписание через неделю`, `расписание на среду и пятницу` и т.п.\n' +
       'Также ты можешь написать дату или отрезок времени (например, `расписание на 1 сернтября - 9 сентября`)',
-    LINK_WITH_GROUP: (bot_name: string, group: string) =>
-      `Отправь эту ссылку одногруппникам - <code>t.me/${bot_name}?start=group_${group}</code>`,
   },
 };
 
