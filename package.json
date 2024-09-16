@@ -24,7 +24,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "@types/express": "^4.17.21",
     "axios": "^1.7.4",
-    "chrono-node": "^2.7.6",
+    "chrono-node": "^2.7.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "date-fns": "^3.6.0",
