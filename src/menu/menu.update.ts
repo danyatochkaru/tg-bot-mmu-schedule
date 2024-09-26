@@ -30,18 +30,21 @@ export class MenuUpdate {
       'data' in ctx.callbackQuery &&
       'text' in ctx.callbackQuery.message
     ) {
-      await editMessage(ctx, MESSAGES[user.language].MENU, {
+      await editMessage(ctx, MESSAGES[user.language ?? 'ru'].MENU, {
         reply_markup: theMenu({
           link: `t.me/${ctx.botInfo.username}?start${user ? `=group_${this.transliterator.decode(user.group_name)}` : ''}`,
-          faq: (await this.faqService.getFaq([user.language])).length > 0,
+          faq:
+            (await this.faqService.getFaq([user.language ?? 'ru'])).length > 0,
         }).reply_markup,
       });
     } else {
       await ctx
-        .reply(MESSAGES[user.language].MENU, {
+        .reply(MESSAGES[user.language ?? 'ru'].MENU, {
           reply_markup: theMenu({
             link: `t.me/${ctx.botInfo.username}?start${user ? `=group_${this.transliterator.decode(user.group_name)}` : ''}`,
-            faq: (await this.faqService.getFaq([user.language])).length > 0,
+            faq:
+              (await this.faqService.getFaq([user.language ?? 'ru'])).length >
+              0,
           }).reply_markup,
         })
         .catch((err) => this.logger.error(JSON.stringify(err, undefined, 2)));
