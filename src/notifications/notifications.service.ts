@@ -83,13 +83,22 @@ export class NotificationsService {
 
     if (rejected.length) {
       let retry_count = 0;
+      // console.log(JSON.stringify(rejected[0], undefined, 2));
       while (
-        rejected.some((r) => r.reason.response.error_code === 429) &&
+        rejected.some(
+          (r) =>
+            r.reason.response.error_code === 429 ||
+            r.reason.response.error_code === 403,
+        ) &&
         retry_count < this.maxRetryCount
       ) {
         ++retry_count;
         const toRetry = rejected
-          .filter((r) => r.reason.response.error_code == 429)
+          .filter(
+            (r) =>
+              r.reason.response.error_code === 429 ||
+              r.reason.response.error_code === 403,
+          )
           .map((r) => r.reason.on.payload.chat_id);
 
         rejected.length = 0;
@@ -108,19 +117,28 @@ export class NotificationsService {
       `Time has passed for ${list.length}: ${Date.now() - startTime}ms`,
     );
 
-    /*
-    TODO: inactivity users who banned bot
     const _bannedByUser = rejected.filter(
-      (r) => r.reason.response.error_code === 000,
+      (r) => r.reason.response.error_code === 403,
     );
 
+    console.log(JSON.stringify(_bannedByUser, undefined, 2));
+
     for (const rej of _bannedByUser) {
-      this.usersService.editInfo(rej.reason.on.payload.chat_id, {
-        is_inactive: true,
-        inactive_reason: '',
-      });
+      this.usersService
+        .editInfo(rej.reason.on.payload.chat_id, {
+          is_inactive: true,
+          inactive_reason: rej.reason.response.description,
+        })
+        .then(() => {
+          /* TEMP:
+          console.log({
+            chat_id: rej.reason.on.payload.chat_id,
+            is_inactive: true,
+            inactive_reason: rej.reason.response.description,
+          });
+          */
+        });
     }
-    */
 
     this.progress = { current: 0, total: 0, rejected: 0 };
     this.isRunning = false;
@@ -147,7 +165,17 @@ export class NotificationsService {
       doLinkPreview?: boolean;
     },
   ) {
-    const rejected = [];
+    const rejected: (
+      | {
+          response: {
+            ok: boolean;
+            error_code: number;
+            description: string;
+          };
+          chat_id: string;
+        }
+      | any
+    )[] = [];
     const requestsPerCycle = options?.requestsPerCycle ?? this.requestsPerCycle;
 
     for (let i = 0; i < list.length; i += requestsPerCycle) {
