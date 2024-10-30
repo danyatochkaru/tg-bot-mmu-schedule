@@ -46,7 +46,9 @@ export class NotificationsService {
     this.isRunning = true;
 
     const users = await this.usersService.findByGroupList(groupList);
-    const list = users.map((u) => parseInt(u.uid));
+    const list = users
+      .filter((u) => !u.is_inactive)
+      .map((u) => parseInt(u.uid));
 
     this.progress.total = list.length;
 
@@ -120,8 +122,6 @@ export class NotificationsService {
     const _bannedByUser = rejected.filter(
       (r) => r.reason.response.error_code === 403,
     );
-
-    console.log(JSON.stringify(_bannedByUser, undefined, 2));
 
     for (const rej of _bannedByUser) {
       this.usersService
