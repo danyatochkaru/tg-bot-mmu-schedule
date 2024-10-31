@@ -71,6 +71,9 @@ export class InfoService {
       );
     } else {
       result.total_count = await this.usersService.getCount();
+      result.total_inactive = await this.usersService.getCount({
+        is_inactive: true,
+      });
     }
 
     return result;

@@ -1,5 +1,6 @@
 export class InfoUsersObject {
   total_count: number;
+  total_inactive?: number;
   details?: Array<{
     groups: Array<{
       group_id: number;
