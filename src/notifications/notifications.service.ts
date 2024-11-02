@@ -83,61 +83,69 @@ export class NotificationsService {
 
     rejected.push(...sendingResult.rejected);
 
-    if (rejected.length) {
-      let retry_count = 0;
-      // console.log(JSON.stringify(rejected[0], undefined, 2));
-      while (
-        rejected.some(
-          (r) =>
-            r.reason.response.error_code === 429 ||
-            r.reason.response.error_code === 403,
-        ) &&
-        retry_count < this.maxRetryCount
-      ) {
-        ++retry_count;
-        const toRetry = rejected
-          .filter(
+    try {
+      if (rejected.length) {
+        let retry_count = 0;
+        // console.log(JSON.stringify(rejected[0], undefined, 2));
+        while (
+          rejected.some(
             (r) =>
-              r.reason.response.error_code === 429 ||
-              r.reason.response.error_code === 403,
-          )
-          .map((r) => r.reason.on.payload.chat_id);
+              !!r.reason.response &&
+              (r.reason.response.error_code === 429 ||
+                r.reason.response.error_code === 403),
+          ) &&
+          retry_count < this.maxRetryCount
+        ) {
+          ++retry_count;
+          const toRetry = rejected
+            .filter(
+              (r) =>
+                !!r.reason.response &&
+                (r.reason.response.error_code === 429 ||
+                  r.reason.response.error_code === 403),
+            )
+            .map((r) => r.reason.on.payload.chat_id);
 
-        rejected.length = 0;
-        const retryResult = await this.sendMessageByList(
-          toRetry,
-          preparedText,
-          {
-            doLinkPreview: options.doLinkPreview ?? true,
-          },
-        );
-        rejected.push(...retryResult.rejected);
+          rejected.length = 0;
+          const retryResult = await this.sendMessageByList(
+            toRetry,
+            preparedText,
+            {
+              doLinkPreview: options.doLinkPreview ?? true,
+            },
+          );
+          rejected.push(...retryResult.rejected);
+        }
       }
-    }
-    console.timeEnd(`Time has passed for ${list.length}`);
-    this.logger.log(
-      `Time has passed for ${list.length}: ${Date.now() - startTime}ms`,
-    );
+      console.timeEnd(`Time has passed for ${list.length}`);
+      this.logger.log(
+        `Time has passed for ${list.length}: ${Date.now() - startTime}ms`,
+      );
 
-    const _bannedByUser = rejected.filter(
-      (r) => r.reason.response.error_code === 403,
-    );
+      const _bannedByUser = rejected.filter(
+        (r) => r.reason.response.error_code === 403,
+      );
 
-    for (const rej of _bannedByUser) {
-      this.usersService
-        .editInfo(rej.reason.on.payload.chat_id, {
-          is_inactive: true,
-          inactive_reason: rej.reason.response.description,
-        })
-        .then(() => {
-          /* TEMP:
+      for (const rej of _bannedByUser) {
+        this.usersService
+          .editInfo(rej.reason.on.payload.chat_id, {
+            is_inactive: true,
+            inactive_reason: rej.reason.response.description,
+          })
+          .then(() => {
+            /* TEMP:
           console.log({
             chat_id: rej.reason.on.payload.chat_id,
             is_inactive: true,
             inactive_reason: rej.reason.response.description,
           });
           */
-        });
+          });
+      }
+    } catch (e: any) {
+      this.logger.error(
+        `Error counting inactive users: ${JSON.stringify(e, undefined, 2)}`,
+      );
     }
 
     this.progress = { current: 0, total: 0, rejected: 0 };
