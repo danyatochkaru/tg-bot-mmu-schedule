@@ -19,6 +19,7 @@ import { InfoModule } from './info/info.module';
 import { FaqModule } from './faq/faq.module';
 import * as https from 'node:https';
 import { DataModule } from './data/data.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 const sessions = new LocalSession();
 
@@ -72,6 +73,7 @@ const sessions = new LocalSession();
     InfoModule,
     FaqModule,
     DataModule,
+    WebhookModule,
   ],
   providers: [AppUpdate],
 })
