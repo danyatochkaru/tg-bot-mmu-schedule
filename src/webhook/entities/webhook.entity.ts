@@ -22,7 +22,7 @@ export class WebhookEntity {
     enum: AppEvent,
     nullable: false,
   })
-  event: string;
+  event: AppEvent | string;
 
   @Column()
   url: string;

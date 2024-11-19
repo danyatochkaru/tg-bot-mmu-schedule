@@ -39,7 +39,7 @@ export class WebhookService {
   findByEventGroup(eventGroup: 'notification') {
     return this.webhookRepository.find({
       where: {
-        event: Like(`${eventGroup}/%`),
+        event: Like(`${eventGroup}/`),
       },
     });
   }

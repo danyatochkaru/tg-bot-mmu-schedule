@@ -1,9 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CanceledError } from 'axios';
 import * as telegramifyMarkdown from 'telegramify-markdown';
+import { WebhookService } from '../webhook/webhook.service';
+import { HttpService } from '@nestjs/axios';
+import { AppEvent } from '../webhook/entities/webhook.entity';
 
 @Injectable()
 export class NotificationsService {
@@ -20,17 +23,35 @@ export class NotificationsService {
     totalUsers: number;
     studentsCountByGroup: Record<string, number>;
   }[];
+  abortController: AbortController | null;
   private logger = new Logger(NotificationsService.name);
 
   constructor(
     @InjectBot() private readonly bot: Telegraf,
     private readonly usersService: UsersService,
+    private readonly webhookService: WebhookService,
+    private readonly httpService: HttpService,
   ) {
     this.requestsPerCycle = 5;
     this.isRunning = false;
     this.maxRetryCount = 5;
     this.progress = { current: 0, total: 0, rejected: 0 };
     this.lastResults = [];
+    this.abortController = null;
+  }
+
+  async abortSending() {
+    if (this.abortController) {
+      this.logger.log('Aborting sending notification');
+      this.sendWH(AppEvent.NOTIFICATION_CANCELLED, this.progress).then(() => {
+        this.logger.log(`WH [${AppEvent.NOTIFICATION_CANCELLED}] sent`);
+      });
+      this.abortController.abort();
+      return 'ok';
+    } else {
+      this.logger.log('Abort sending notification canceled');
+      throw new BadRequestException();
+    }
   }
 
   async sendNotifies(
@@ -44,6 +65,7 @@ export class NotificationsService {
       throw new CanceledError('Already is running. Try later...');
     }
     this.isRunning = true;
+    this.abortController = new AbortController();
 
     const users = await this.usersService.findByGroupList(groupList);
     const list = users
@@ -75,6 +97,10 @@ export class NotificationsService {
 
     const preparedText = telegramifyMarkdown(text);
 
+    this.sendWH(AppEvent.NOTIFICATION_STARTED, this.progress).then(() => {
+      this.logger.log(`WH [${AppEvent.NOTIFICATION_STARTED}] sent`);
+    });
+
     const startTime = Date.now();
     console.time(`Time has passed for ${list.length}`);
     const sendingResult = await this.sendMessageByList(list, preparedText, {
@@ -83,10 +109,16 @@ export class NotificationsService {
 
     rejected.push(...sendingResult.rejected);
 
+    if (sendingResult.status !== 0) {
+      this.logger.error(
+        `Error occurred during sending notifications. Reason: ${sendingResult.message}`,
+      );
+      throw new Error('Error occurred during sending notifications');
+    }
+
     try {
       if (rejected.length) {
         let retry_count = 0;
-        // console.log(JSON.stringify(rejected[0], undefined, 2));
         while (
           rejected.some(
             (r) =>
@@ -115,6 +147,13 @@ export class NotificationsService {
             },
           );
           rejected.push(...retryResult.rejected);
+
+          if (sendingResult.status !== 0) {
+            this.logger.error(
+              `Error occurred during sending notifications. Reason: ${retryResult.message}`,
+            );
+            return new Error('Error occurred during sending notifications');
+          }
         }
       }
       console.timeEnd(`Time has passed for ${list.length}`);
@@ -150,6 +189,7 @@ export class NotificationsService {
 
     this.progress = { current: 0, total: 0, rejected: 0 };
     this.isRunning = false;
+    this.abortController = null;
     this.lastResults.push({
       allOk: rejected.length === 0,
       rejected: rejected.map((i) => ({
@@ -162,7 +202,11 @@ export class NotificationsService {
       ).groups,
     });
     if (this.lastResults.length > 10) this.lastResults.shift();
-    return this.lastResults.slice(-1);
+    const result = this.lastResults.slice(-1);
+    this.sendWH(AppEvent.NOTIFICATION_COMPLETED, result).then(() => {
+      this.logger.log(`WH [${AppEvent.NOTIFICATION_COMPLETED}] sent`);
+    });
+    return result;
   }
 
   async sendMessageByList(
@@ -171,6 +215,7 @@ export class NotificationsService {
     options?: {
       requestsPerCycle?: number;
       doLinkPreview?: boolean;
+      signal?: AbortSignal;
     },
   ) {
     const rejected: (
@@ -187,6 +232,12 @@ export class NotificationsService {
     const requestsPerCycle = options?.requestsPerCycle ?? this.requestsPerCycle;
 
     for (let i = 0; i < list.length; i += requestsPerCycle) {
+      if (options?.signal?.aborted) {
+        this.logger.log(
+          `Aborted by signal. Reason: ${typeof options.signal.reason === 'string' ? options.signal.reason : JSON.stringify(options.signal.reason)}`,
+        );
+        return { rejected, message: 'Aborted by signal', status: 1 };
+      }
       const preparedList = list.slice(i, i + requestsPerCycle);
 
       const startTime = Date.now();
@@ -211,11 +262,31 @@ export class NotificationsService {
       this.progress.rejected = rejected.length;
     }
 
-    return { rejected };
+    return { rejected, message: 'ok', status: 0 };
   }
 
   async sleep(ms: number): Promise<void> {
     // console.log(`asleep for ${ms} ms`);
     return new Promise((resolve) => setTimeout(() => resolve(), ms));
+  }
+
+  async sendWH(event: AppEvent, payload: any) {
+    const wh = await this.webhookService.findByEventGroup('notification');
+
+    const clients = wh.filter((i) => i.event === event && i.isEnabled);
+
+    for (const client of clients) {
+      try {
+        this.httpService.post(client.url, payload, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch (e) {
+        this.logger.error(
+          `Error sending webhook to ${client.url}`,
+          JSON.stringify(e),
+        );
+        console.error(`Error sending webhook to ${client.url}:`, e);
+      }
+    }
   }
 }

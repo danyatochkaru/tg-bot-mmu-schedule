@@ -40,4 +40,9 @@ export class NotificationsController {
 
     return 'ok';
   }
+
+  @Post('/abort')
+  abortSending() {
+    return this.notificationsService.abortSending();
+  }
 }
