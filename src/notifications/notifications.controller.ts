@@ -31,6 +31,7 @@ export class NotificationsController {
     }
 
     this.notificationsService.sendNotifies(
+      newNotification.id,
       newNotification.groups,
       newNotification.text,
       {

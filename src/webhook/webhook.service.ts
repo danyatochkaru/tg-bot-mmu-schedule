@@ -3,7 +3,7 @@ import { CreateWebhookDto } from './dto/create-webhook.dto';
 import { UpdateWebhookDto } from './dto/update-webhook.dto';
 import { AppEvent, WebhookEntity } from './entities/webhook.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class WebhookService {
@@ -27,7 +27,9 @@ export class WebhookService {
       return null;
     }
 
-    return this.webhookRepository.create(createWebhookDto);
+    const new_webhook = this.webhookRepository.create(createWebhookDto);
+
+    return this.webhookRepository.save(new_webhook);
   }
 
   findAll(event?: AppEvent) {
@@ -36,12 +38,10 @@ export class WebhookService {
     });
   }
 
-  findByEventGroup(eventGroup: 'notification') {
-    return this.webhookRepository.find({
-      where: {
-        event: Like(`${eventGroup}/`),
-      },
-    });
+  findByEventGroup(eventGroup: 'notification'): Promise<WebhookEntity[]> {
+    return this.webhookRepository.query(
+      `SELECT * FROM "webhook_entity" WHERE "webhook_entity"."event"::text LIKE '${eventGroup}/%'`,
+    );
   }
 
   findOne(id: string) {

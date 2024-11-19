@@ -9,6 +9,10 @@ import {
 } from 'class-validator';
 
 export class NewNotification {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
   @IsArray()
   @IsInt({ each: true })
   @IsPositive({ each: true })

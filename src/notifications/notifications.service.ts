@@ -10,6 +10,14 @@ import { AppEvent } from '../webhook/entities/webhook.entity';
 
 @Injectable()
 export class NotificationsService {
+  args: {
+    id: string;
+    groupList: number[];
+    text: string;
+    options?: {
+      doLinkPreview?: boolean;
+    };
+  } | null;
   requestsPerCycle: number;
   isRunning: boolean;
   maxRetryCount: number;
@@ -32,6 +40,7 @@ export class NotificationsService {
     private readonly webhookService: WebhookService,
     private readonly httpService: HttpService,
   ) {
+    this.args = null;
     this.requestsPerCycle = 5;
     this.isRunning = false;
     this.maxRetryCount = 5;
@@ -43,7 +52,10 @@ export class NotificationsService {
   async abortSending() {
     if (this.abortController) {
       this.logger.log('Aborting sending notification');
-      this.sendWH(AppEvent.NOTIFICATION_CANCELLED, this.progress).then(() => {
+      this.sendWH(AppEvent.NOTIFICATION_CANCELLED, {
+        args: this.args,
+        data: this.progress,
+      }).then(() => {
         this.logger.log(`WH [${AppEvent.NOTIFICATION_CANCELLED}] sent`);
       });
       this.abortController.abort();
@@ -55,6 +67,7 @@ export class NotificationsService {
   }
 
   async sendNotifies(
+    id: string,
     groupList: number[],
     text: string,
     options?: {
@@ -72,6 +85,7 @@ export class NotificationsService {
       .filter((u) => !u.is_inactive)
       .map((u) => parseInt(u.uid));
 
+    this.args = { id, groupList, text, options };
     this.progress.total = list.length;
 
     type Rejected = Omit<PromiseRejectedResult, 'reason'> & {
@@ -97,7 +111,10 @@ export class NotificationsService {
 
     const preparedText = telegramifyMarkdown(text);
 
-    this.sendWH(AppEvent.NOTIFICATION_STARTED, this.progress).then(() => {
+    this.sendWH(AppEvent.NOTIFICATION_STARTED, {
+      args: this.args,
+      data: this.progress,
+    }).then(() => {
       this.logger.log(`WH [${AppEvent.NOTIFICATION_STARTED}] sent`);
     });
 
@@ -203,9 +220,13 @@ export class NotificationsService {
     });
     if (this.lastResults.length > 10) this.lastResults.shift();
     const result = this.lastResults.slice(-1);
-    this.sendWH(AppEvent.NOTIFICATION_COMPLETED, result).then(() => {
+    this.sendWH(AppEvent.NOTIFICATION_COMPLETED, {
+      args: this.args,
+      data: result,
+    }).then(() => {
       this.logger.log(`WH [${AppEvent.NOTIFICATION_COMPLETED}] sent`);
     });
+    this.args = null;
     return result;
   }
 
@@ -277,9 +298,11 @@ export class NotificationsService {
 
     for (const client of clients) {
       try {
-        this.httpService.post(client.url, payload, {
-          headers: { 'Content-Type': 'application/json' },
-        });
+        this.httpService
+          .post(client.url, payload, {
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .subscribe();
       } catch (e) {
         this.logger.error(
           `Error sending webhook to ${client.url}`,
