@@ -19,6 +19,7 @@ export class NotificationsController {
   getNotificationsInfo() {
     return {
       isRunning: this.notificationsService.isRunning,
+      args: this.notificationsService.args,
       progress: this.notificationsService.progress,
       history: this.notificationsService.lastResults,
     };

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   Patch,
   Post,
   Query,
@@ -27,7 +26,7 @@ export class WebhookController {
   }
 
   @Get()
-  findAll(@Query('event', new ParseEnumPipe(AppEvent)) event?: AppEvent) {
+  findAll(@Query('event') event?: AppEvent) {
     return this.webhookService.findAll(event);
   }
 

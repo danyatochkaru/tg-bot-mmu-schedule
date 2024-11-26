@@ -161,6 +161,7 @@ export class NotificationsService {
             preparedText,
             {
               doLinkPreview: options.doLinkPreview ?? true,
+              isRetry: true,
             },
           );
           rejected.push(...retryResult.rejected);
@@ -237,6 +238,7 @@ export class NotificationsService {
       requestsPerCycle?: number;
       doLinkPreview?: boolean;
       signal?: AbortSignal;
+      isRetry?: boolean;
     },
   ) {
     const rejected: (
@@ -279,8 +281,10 @@ export class NotificationsService {
       if (i + requestsPerCycle < list.length)
         await this.sleep(timeLeft > 1000 ? 0 : 1000);
 
-      this.progress.current = i;
-      this.progress.rejected = rejected.length;
+      this.progress.current = options.isRetry ? this.progress.current + i : i;
+      this.progress.rejected = options.isRetry
+        ? this.progress.rejected + rejected.length
+        : rejected.length;
     }
 
     return { rejected, message: 'ok', status: 0 };
