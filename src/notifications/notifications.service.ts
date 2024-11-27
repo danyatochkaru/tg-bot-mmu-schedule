@@ -223,7 +223,7 @@ export class NotificationsService {
     const result = this.lastResults.slice(-1);
     this.sendWH(AppEvent.NOTIFICATION_COMPLETED, {
       args: this.args,
-      data: result,
+      data: result[0],
     }).then(() => {
       this.logger.log(`WH [${AppEvent.NOTIFICATION_COMPLETED}] sent`);
     });
