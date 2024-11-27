@@ -91,13 +91,18 @@ export class UsersService {
     });
   }
 
-  async getCountByGroups(groupList: number[], users?: UserEntity[]) {
+  async getCountByGroups(
+    groupList: number[],
+    users?: UserEntity[],
+    onlyActive: boolean = false,
+  ) {
     const usersFromDB = users ?? (await this.findByGroupList(groupList));
 
     const studentsCountByGroup: Record<number, number> = {};
     for (const groupId of groupList) {
       studentsCountByGroup[groupId] = usersFromDB.filter(
-        (u) => u.group_id === Number(groupId),
+        (u) =>
+          u.group_id === Number(groupId) && (!onlyActive || !u.is_inactive),
       ).length;
     }
 

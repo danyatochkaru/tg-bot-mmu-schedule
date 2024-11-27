@@ -216,7 +216,7 @@ export class NotificationsService {
       })),
       totalUsers: users.length,
       studentsCountByGroup: (
-        await this.usersService.getCountByGroups(groupList, users)
+        await this.usersService.getCountByGroups(groupList, users, true)
       ).groups,
     });
     if (this.lastResults.length > 10) this.lastResults.shift();
