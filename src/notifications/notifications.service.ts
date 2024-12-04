@@ -185,7 +185,7 @@ export class NotificationsService {
 
       for (const rej of _bannedByUser) {
         this.usersService
-          .editInfo(rej.reason.on.payload.chat_id, {
+          .editInfo(rej.reason.on?.payload.chat_id, {
             is_inactive: true,
             inactive_reason: rej.reason.response.description,
           })
@@ -201,24 +201,30 @@ export class NotificationsService {
       }
     } catch (e: any) {
       this.logger.error(
-        `Error counting inactive users: ${JSON.stringify(e, undefined, 2)}`,
+        `Error counting inactive users: ${typeof e === 'string' ? e : JSON.stringify(e, undefined, 2)}`,
       );
     }
 
     this.progress = { current: 0, total: 0, rejected: 0 };
     this.isRunning = false;
     this.abortController = null;
-    this.lastResults.push({
-      allOk: rejected.length === 0,
-      rejected: rejected.map((i) => ({
-        response: i.reason.response,
-        chat_id: i.reason.on.payload.chat_id,
-      })),
-      totalUsers: users.length,
-      studentsCountByGroup: (
-        await this.usersService.getCountByGroups(groupList, users, true)
-      ).groups,
-    });
+    try {
+      this.lastResults.push({
+        allOk: rejected.length === 0,
+        rejected: rejected.map((i) => ({
+          response: i.reason.response,
+          chat_id: i.reason.on.payload.chat_id,
+        })),
+        totalUsers: users.length,
+        studentsCountByGroup: (
+          await this.usersService.getCountByGroups(groupList, users, true)
+        ).groups,
+      });
+    } catch (e: any) {
+      this.logger.error(
+        `Error pushing results: ${typeof e === 'string' ? e : JSON.stringify(e, undefined, 2)}`,
+      );
+    }
     if (this.lastResults.length > 10) this.lastResults.shift();
     const result = this.lastResults.slice(-1);
     this.sendWH(AppEvent.NOTIFICATION_COMPLETED, {
@@ -266,14 +272,14 @@ export class NotificationsService {
       const startTime = Date.now();
 
       await Promise.allSettled(
-        preparedList.map((item) => {
-          return this.bot.telegram.sendMessage(item, text, {
+        preparedList.map((item) =>
+          this.bot.telegram.sendMessage(item, text, {
             parse_mode: 'MarkdownV2',
             link_preview_options: {
               is_disabled: !options.doLinkPreview,
             },
-          });
-        }),
+          }),
+        ),
       ).then((results) =>
         results.forEach((r) => r.status === 'rejected' && rejected.push(r)),
       );
